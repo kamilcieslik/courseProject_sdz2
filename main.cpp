@@ -1,16 +1,16 @@
 #include <iostream>
 
 
-
-void displayMenu(const std::string& info, const std::string& alghoritm_1, const std::string& alghoritm_2) //Menu dla tabeli i listy.
+void displayMenu(const std::string &info, const std::string &alghoritm_1,
+                 const std::string &alghoritm_2) //Menu dla tabeli i listy.
 {
     std::cout << std::endl;
     std::cout << info << std::endl;
     std::cout << "1. Wczytaj z pliku." << std::endl;
     std::cout << "2. Wygeneruj graf losowo." << std::endl;
     std::cout << "3. Wyświetl (macierzowo i listowo)." << std::endl;
-    std::cout << "4. Algorytm - "<<alghoritm_1<<" (macierzowo i listowo)." << std::endl;
-    std::cout << "5. Algorytm - "<<alghoritm_2<<" (macierzowo i listowo)." << std::endl;
+    std::cout << "4. Algorytm - " << alghoritm_1 << " (macierzowo i listowo)." << std::endl;
+    std::cout << "5. Algorytm - " << alghoritm_2 << " (macierzowo i listowo)." << std::endl;
     std::cout << "9. Test (pomiary)." << std::endl;
     std::cout << "0. Powrot do menu." << std::endl;
     std::cout << "Podaj opcje:";
@@ -27,13 +27,13 @@ void menu_mst() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-               
+                
                 break;
             case 2: //Generowanie grafu pseudolosowo.
-               
+                
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-               
+                
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
                 
@@ -44,9 +44,9 @@ void menu_mst() //Obsługa tabeli.
                 break;
             
             case 9: //Test - pomiary czasowe.
-               
+                
                 break;
-
+            
             default:
                 break;
         }
@@ -112,7 +112,7 @@ int main() {
             case 2:
                 menu_the_shortest_path();
                 break;
-                
+            
             default:
                 break;
         }
