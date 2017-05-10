@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.7)
-project(untitled)
+project(sdizo_2)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp)
-add_executable(untitled ${SOURCE_FILES})
+set(SOURCE_FILES
+    AdjacencyList.h
+    AGraph.h
+    GraphAdjacencyListsImplementation.cpp
+    GraphAdjacencyListsImplementation.h
+    main.cpp)
+
+add_executable(sdizo_2 ${SOURCE_FILES})

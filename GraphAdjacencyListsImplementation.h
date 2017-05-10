@@ -2,13 +2,31 @@
 // Created by mrfarinq on 10.05.17.
 //
 
-#ifndef UNTITLED_GRAPHADJACENCYLISTSIMPLEMENTATION_H
-#define UNTITLED_GRAPHADJACENCYLISTSIMPLEMENTATION_H
+#pragma once
+
+#include <iostream>
+#include "AdjacencyList.h"
+#include "AGraph.h"
 
 
-class GraphAdjacencyListsImplementation {
-
+class GraphAdjListImpl : public AGraph {
+private:
+    int V;
+    AdjacencyList<int> *array;
+public:
+    
+    explicit GraphAdjListImpl(int V);
+    
+    ~GraphAdjListImpl();
+    
+    AdjacencyList<int>::AdjacencyListNode *newAdjacencyListNode(int valueOfVertex);
+    
+    void addEdge(int vertex_from, int vertex_to);
+    
+    virtual void printGraph();
+    
+    virtual void createGraphWithRandomIntegers(int numberOfElements);
+    
+    virtual void readFromFile(std::string path);
+    
 };
-
-
-#endif //UNTITLED_GRAPHADJACENCYLISTSIMPLEMENTATION_H
