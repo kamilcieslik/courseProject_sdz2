@@ -54,3 +54,11 @@ void GraphAdjListImpl::createGraphWithRandomIntegers(int numberOfElements) {
 void GraphAdjListImpl::readFromFile(std::string path) {
 
 }
+
+GraphAdjListImpl::GraphAdjListImpl(const GraphAdjListImpl &other) {
+
+}
+
+GraphAdjListImpl &GraphAdjListImpl::operator=(const GraphAdjListImpl &other) {
+    return <#initializer#>;
+}

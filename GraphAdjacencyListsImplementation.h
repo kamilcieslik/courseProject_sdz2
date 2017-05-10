@@ -17,6 +17,10 @@ public:
     
     explicit GraphAdjListImpl(int V);
     
+    GraphAdjListImpl(const GraphAdjListImpl &other);
+    
+    GraphAdjListImpl &operator=(const GraphAdjListImpl &other);
+    
     ~GraphAdjListImpl();
     
     AdjacencyList<int>::AdjacencyListNode *newAdjacencyListNode(int valueOfVertex);
