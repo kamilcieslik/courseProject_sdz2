@@ -4,18 +4,6 @@
 
 void displayMenu(const std::string& info, const std::string& alghoritm_1, const std::string& alghoritm_2) //Menu dla tabeli i listy.
 {
-<<<<<<< HEAD
-    cout << endl;
-    cout << info << endl;
-    cout << "1. Wczytaj z pliku." << endl;
-    cout << "2. Wygeneruj graf losowo." << endl;
-    cout << "3. Wyświetl (macierzowo i listowo)." << endl;
-    cout << "4. Algorytm - "<<alghoritm_1<<" (macierzowo i listowo)." << endl;
-    cout << "5. Algorytm - "<<alghoritm_2<<" (macierzowo i listowo)." << endl;
-    cout << "9. Testy (pomiary)." << endl;
-    cout << "0. Powrot do menu." << endl;
-    cout << "Podaj opcje:";
-=======
     std::cout << std::endl;
     std::cout << info << std::endl;
     std::cout << "1. Wczytaj z pliku." << std::endl;
@@ -26,7 +14,6 @@ void displayMenu(const std::string& info, const std::string& alghoritm_1, const 
     std::cout << "9. Test (pomiary)." << std::endl;
     std::cout << "0. Powrot do menu." << std::endl;
     std::cout << "Podaj opcje:";
->>>>>>> 06ebf012df43735ac2b0639bc8ad16f8cb2928fa
 }
 
 void menu_mst() //Obsługa tabeli.
