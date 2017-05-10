@@ -11,7 +11,7 @@ void displayMenu(const string& info, const string& alghoritm_1, const string& al
     cout << "3. Wyświetl (macierzowo i listowo)." << endl;
     cout << "4. Algorytm - "<<alghoritm_1<<" (macierzowo i listowo)." << endl;
     cout << "5. Algorytm - "<<alghoritm_2<<" (macierzowo i listowo)." << endl;
-    cout << "9. Test (pomiary)." << endl;
+    cout << "9. Testy (pomiary)." << endl;
     cout << "0. Powrot do menu." << endl;
     cout << "Podaj opcje:";
 }
