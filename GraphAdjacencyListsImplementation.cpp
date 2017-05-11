@@ -6,7 +6,7 @@
 #include "GraphAdjacencyListsImplementation.h"
 
 
-explicit GraphAdjListImpl::GraphAdjListImpl(int V) {
+GraphAdjListImpl::GraphAdjListImpl(int V) {
     this->V = V;
     array = new AdjacencyList<int>[V];
     for (int i = 0; i < V; ++i)
@@ -47,18 +47,4 @@ void GraphAdjListImpl::printGraph() {
     }
 }
 
-void GraphAdjListImpl::createGraphWithRandomIntegers(int numberOfElements) {
-    std::cout << numberOfElements;
-}
 
-void GraphAdjListImpl::readFromFile(std::string path) {
-
-}
-
-GraphAdjListImpl::GraphAdjListImpl(const GraphAdjListImpl &other) {
-
-}
-
-GraphAdjListImpl &GraphAdjListImpl::operator=(const GraphAdjListImpl &other) {
-    return <#initializer#>;
-}

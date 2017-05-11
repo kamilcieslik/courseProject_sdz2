@@ -1,5 +1,6 @@
 #include <iostream>
 #include "GraphAdjacencyListsImplementation.h"
+#include "Graph.h"
 
 void displayMenu(const std::string &info, const std::string &alghoritm_1,
                  const std::string &alghoritm_2) //Menu dla tabeli i listy.
@@ -19,6 +20,7 @@ void displayMenu(const std::string &info, const std::string &alghoritm_1,
 void menu_mst() //Obsługa tabeli.
 {
     GraphAdjListImpl gh(4);
+    Graph g;
     std::string path;
     int option;
     do {
@@ -27,20 +29,14 @@ void menu_mst() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                gh.addEdge(0, 1);
-                gh.addEdge(0, 4);
-                gh.addEdge(1, 2);
-                gh.addEdge(1, 3);
-                gh.addEdge(1, 4);
-                gh.addEdge(2, 3);
-                gh.addEdge(3, 4);
-                gh.printGraph();
+                g.createGraphWithRandomIntegers();
                 break;
             case 2: //Generowanie grafu pseudolosowo.
-                
+    
+                g.readGraphFromFile("graph.txt");
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                
+                g.saveToFile();
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
                 

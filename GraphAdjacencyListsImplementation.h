@@ -9,17 +9,21 @@
 #include "AGraph.h"
 
 
-class GraphAdjListImpl : public AGraph {
+class GraphAdjListImpl {
 private:
     int V;
     AdjacencyList<int> *array;
+    int amountOfEdges;
+    int amountOfVertex;
+    struct Edge {
+        int vertex_from=-1;
+        int vertex_to=-1;
+        int weight=0;
+    };
+
 public:
     
     explicit GraphAdjListImpl(int V);
-    
-    GraphAdjListImpl(const GraphAdjListImpl &other);
-    
-    GraphAdjListImpl &operator=(const GraphAdjListImpl &other);
     
     ~GraphAdjListImpl();
     
@@ -28,9 +32,5 @@ public:
     void addEdge(int vertex_from, int vertex_to);
     
     virtual void printGraph();
-    
-    virtual void createGraphWithRandomIntegers(int numberOfElements);
-    
-    virtual void readFromFile(std::string path);
     
 };
