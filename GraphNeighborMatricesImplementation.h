@@ -8,7 +8,23 @@
 #include "Graph.h"
 
 class GraphNghbMatricesImpl: public Graph {
+    int **array;
 
+
+public:
+    explicit GraphNghbMatricesImpl();
+    
+    ~GraphNghbMatricesImpl();
+    
+    void CreateNeighborMatricesForDirectedGraph();
+    
+    void PrintDirectedGraph();
+    
+    
+    virtual void KruskalsAlgorithm();
+    virtual void PrimsAlgorithm();
+    virtual void DijkstrasAlgorithm();
+    virtual void Ford_FulkersonAlgorithm();
 };
 
 

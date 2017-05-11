@@ -17,7 +17,7 @@ Graph::~Graph() {
     edges = nullptr;
 }
 
-void Graph::createGraphWithRandomIntegers() {
+void Graph::CreateGraphWithRandomIntegers() {
     
     std::cout << "Podaj ilość wierzchołków: " << std::endl;
     std::cin >> amountOfVertices;
@@ -128,10 +128,10 @@ void Graph::createGraphWithRandomIntegers() {
     firstVertex = edges[0][0];
     lastVertex = edges[amountOfVertices - 1][0];
     
-    saveToFile();
+    SaveToFile();
 }
 
-void Graph::readGraphFromFile(std::string path) {
+void Graph::ReadGraphFromFile(std::string path) {
     
     std::fstream file(path, std::ios::in);
     if (file.is_open()) {
@@ -160,7 +160,7 @@ void Graph::readGraphFromFile(std::string path) {
     }
 }
 
-void Graph::saveToFile() {
+void Graph::SaveToFile() {
     std::fstream file("graph.txt", std::ios::out);
     if (file.good()) {
         file << amountOfEdges << " " << amountOfVertices << " " << firstVertex << " "

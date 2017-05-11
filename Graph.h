@@ -19,11 +19,11 @@ protected:
 public:
     Graph();
     
-    ~Graph();
+    virtual ~Graph();
     
-    void createGraphWithRandomIntegers();
-    void readGraphFromFile(std::string path);
-    void saveToFile();
+    void CreateGraphWithRandomIntegers();
+    void ReadGraphFromFile(std::string path);
+    void SaveToFile();
     virtual void KruskalsAlgorithm() = 0;
     virtual void PrimsAlgorithm() = 0;
     virtual void DijkstrasAlgorithm() =0;

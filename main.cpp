@@ -1,5 +1,6 @@
 #include <iostream>
 #include "GraphAdjacencyListsImplementation.h"
+#include "GraphNeighborMatricesImplementation.h"
 #include "Graph.h"
 
 void displayMenu(const std::string &info, const std::string &alghoritm_1,
@@ -22,6 +23,8 @@ void menu_mst() //Obsługa tabeli.
     
     //GraphAdjListImpl gh(4);
     GraphAdjListImpl g;
+    
+    
     std::string path;
     int option;
     do {
@@ -30,14 +33,14 @@ void menu_mst() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                g.createGraphWithRandomIntegers();
+                g.CreateGraphWithRandomIntegers();
                 break;
             case 2: //Generowanie grafu pseudolosowo.
     
-                g.CreateAdjacencyListsOfGraph();
+                g.CreateAdjacencyListsForDirectedGraph();
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                g.printGraph();
+                g.PrintDirectedGraph();
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
                 
@@ -60,7 +63,7 @@ void menu_mst() //Obsługa tabeli.
 
 void menu_the_shortest_path() //Obsługa tabeli.
 {
-    
+    GraphNghbMatricesImpl g2;
     std::string path;
     int option;
     do {
@@ -69,13 +72,13 @@ void menu_the_shortest_path() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                
+                g2.CreateGraphWithRandomIntegers();
                 break;
             case 2: //Generowanie grafu pseudolosowo.
-                
+                g2.CreateNeighborMatricesForDirectedGraph();
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                
+                g2.PrintDirectedGraph();
                 break;
             case 4: //Algorytm 1. - Dijkstry (macierzowo i listowo).
                 

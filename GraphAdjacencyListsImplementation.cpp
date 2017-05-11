@@ -14,7 +14,7 @@ GraphAdjListImpl::~GraphAdjListImpl() {
     delete[] array;
 };
 
-void GraphAdjListImpl::printGraph() {
+void GraphAdjListImpl::PrintDirectedGraph() {
     int v;
     for (v = 0; v < amountOfVertices; ++v) {
         auto pointerToNodesOfAdjacencyList = array[v].head;
@@ -29,7 +29,7 @@ void GraphAdjListImpl::printGraph() {
     }
 }
 
-void GraphAdjListImpl::addEdge(int vertex_from, int vertex_to, int vertex_weight) {
+void GraphAdjListImpl::AddEdgeForDirectedGraph(int vertex_from, int vertex_to, int vertex_weight) {
     auto newNode = new AdjacencyList<int>::AdjacencyListNode;
     newNode->vertex = vertex_from;
     newNode->weight = vertex_weight;
@@ -37,13 +37,13 @@ void GraphAdjListImpl::addEdge(int vertex_from, int vertex_to, int vertex_weight
     array[vertex_to].head = newNode;
 }
 
-void GraphAdjListImpl::CreateAdjacencyListsOfGraph() {
+void GraphAdjListImpl::CreateAdjacencyListsForDirectedGraph() {
     array = new AdjacencyList<int>[amountOfVertices];
     for (int i = 0; i < amountOfVertices; ++i)
         array[i].head = NULL;
     
     for (int i = 0; i < amountOfEdges; i++) {
-        addEdge(edges[i][1], edges[i][0], edges[i][2]);
+        AddEdgeForDirectedGraph(edges[i][1], edges[i][0], edges[i][2]);
     }
 }
 

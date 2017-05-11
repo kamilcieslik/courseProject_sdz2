@@ -23,11 +23,11 @@ public:
     
     //AdjacencyList<int>::AdjacencyListNode *newAdjacencyListNode(int valueOfVertex);
     
-    void addEdge(int vertex_from, int vertex_to, int vertex_weight);
+    void AddEdgeForDirectedGraph(int vertex_from, int vertex_to, int vertex_weight);
     
-    virtual void printGraph();
+    virtual void PrintDirectedGraph();
     
-    void CreateAdjacencyListsOfGraph();
+    void CreateAdjacencyListsForDirectedGraph();
     
     virtual void KruskalsAlgorithm();
     virtual void PrimsAlgorithm();
