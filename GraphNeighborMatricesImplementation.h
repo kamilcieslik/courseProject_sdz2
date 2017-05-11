@@ -8,9 +8,9 @@
 #include "Graph.h"
 
 class GraphNghbMatricesImpl: public Graph {
-    int **array;
+    int **arrayOfMatrixDirectedGraph;
 
-
+    
 public:
     explicit GraphNghbMatricesImpl();
     

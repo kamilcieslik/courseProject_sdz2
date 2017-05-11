@@ -11,13 +11,13 @@ GraphAdjListImpl::GraphAdjListImpl() {
 }
 
 GraphAdjListImpl::~GraphAdjListImpl() {
-    delete[] array;
+    delete[] arrayOfAdjListDirectedGraph;
 };
 
 void GraphAdjListImpl::PrintDirectedGraph() {
     int v;
     for (v = 0; v < amountOfVertices; ++v) {
-        auto pointerToNodesOfAdjacencyList = array[v].head;
+        auto pointerToNodesOfAdjacencyList = arrayOfAdjListDirectedGraph[v].head;
         std::cout << "Adj[" << v << "]: ";
         while (pointerToNodesOfAdjacencyList != nullptr) {
             std::cout << pointerToNodesOfAdjacencyList->vertex;
@@ -33,17 +33,17 @@ void GraphAdjListImpl::AddEdgeForDirectedGraph(int vertex_from, int vertex_to, i
     auto newNode = new AdjacencyList<int>::AdjacencyListNode;
     newNode->vertex = vertex_from;
     newNode->weight = vertex_weight;
-    newNode->next = array[vertex_to].head;
-    array[vertex_to].head = newNode;
+    newNode->next = arrayOfAdjListDirectedGraph[vertex_to].head;
+    arrayOfAdjListDirectedGraph[vertex_to].head = newNode;
 }
 
 void GraphAdjListImpl::CreateAdjacencyListsForDirectedGraph() {
-    array = new AdjacencyList<int>[amountOfVertices];
+    arrayOfAdjListDirectedGraph = new AdjacencyList<int>[amountOfVertices];
     for (int i = 0; i < amountOfVertices; ++i)
-        array[i].head = NULL;
+        arrayOfAdjListDirectedGraph[i].head = NULL;
     
-    for (int i = 0; i < amountOfEdges; i++) {
-        AddEdgeForDirectedGraph(edges[i][1], edges[i][0], edges[i][2]);
+    for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
+        AddEdgeForDirectedGraph(edgesOfDirectedGraph[i][1], edgesOfDirectedGraph[i][0], edgesOfDirectedGraph[i][2]);
     }
 }
 

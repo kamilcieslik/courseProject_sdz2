@@ -43,7 +43,9 @@ void menu_mst() //Obsługa tabeli.
                 g.PrintDirectedGraph();
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
-                
+                g.ReadGraphFromFile("undirectedGraph1.txt");
+                //g.SaveToFileDirectedGraph();
+                //g.SaveToFileUndirectedGraph();
                 break;
             
             case 5: //Algorytm 2. - Kruskala (macierzowo i listowo).

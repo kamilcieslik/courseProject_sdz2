@@ -10,11 +10,17 @@
 class Graph {
 protected:
     int maximumWeight;
-    int amountOfEdges;
+    int amountOfEdgesInDirectedGraph;
     int amountOfVertices;
     int firstVertex;
     int lastVertex;
-    int **edges;
+    int **edgesOfDirectedGraph;
+    
+    int **edgesOfUndirectedGraph;
+    
+    //
+    int amountOfEdgesInUndirectedGraph;
+    //
     
 public:
     Graph();
@@ -23,6 +29,7 @@ public:
     
     void CreateGraphWithRandomIntegers();
     void ReadGraphFromFile(std::string path);
+    void GenerateUndirectedGraph();
     void SaveToFile();
     virtual void KruskalsAlgorithm() = 0;
     virtual void PrimsAlgorithm() = 0;

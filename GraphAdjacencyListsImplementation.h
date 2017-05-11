@@ -12,7 +12,7 @@
 
 class GraphAdjListImpl: public Graph {
 private:
-    AdjacencyList<int> *array;
+    AdjacencyList<int> *arrayOfAdjListDirectedGraph;
     
 
 public:
