@@ -8,7 +8,7 @@
 #include <iostream>
 
 class Graph {
-private:
+protected:
     int maximumWeight;
     int amountOfEdges;
     int amountOfVertices;
@@ -24,6 +24,10 @@ public:
     void createGraphWithRandomIntegers();
     void readGraphFromFile(std::string path);
     void saveToFile();
+    virtual void KruskalsAlgorithm() = 0;
+    virtual void PrimsAlgorithm() = 0;
+    virtual void DijkstrasAlgorithm() =0;
+    virtual void Ford_FulkersonAlgorithm() =0;
 };
 
 

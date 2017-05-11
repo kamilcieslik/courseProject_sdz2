@@ -1,0 +1,15 @@
+//
+// Created by mrfarinq on 11.05.17.
+//
+
+#ifndef SDIZO_2_GRAPHNEIGHBORMATRICESIMPLEMENTATION_H
+#define SDIZO_2_GRAPHNEIGHBORMATRICESIMPLEMENTATION_H
+
+#include "Graph.h"
+
+class GraphNghbMatricesImpl: public Graph {
+
+};
+
+
+#endif //SDIZO_2_GRAPHNEIGHBORMATRICESIMPLEMENTATION_H

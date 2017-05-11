@@ -8,8 +8,10 @@ set(SOURCE_FILES
     AGraph.h
     GraphAdjacencyListsImplementation.cpp
     GraphAdjacencyListsImplementation.h
+    GraphNeighborMatricesImplementation.cpp
+    GraphNeighborMatricesImplementation.h
     Graph.cpp
     Graph.h
-    main.cpp)
+        main.cpp)
 
 add_executable(sdizo_2 ${SOURCE_FILES})

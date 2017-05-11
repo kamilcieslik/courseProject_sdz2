@@ -6,31 +6,32 @@
 
 #include <iostream>
 #include "AdjacencyList.h"
+#include "Graph.h"
 #include "AGraph.h"
 
 
-class GraphAdjListImpl {
+class GraphAdjListImpl: public Graph {
 private:
-    int V;
     AdjacencyList<int> *array;
-    int amountOfEdges;
-    int amountOfVertex;
-    struct Edge {
-        int vertex_from=-1;
-        int vertex_to=-1;
-        int weight=0;
-    };
+    
 
 public:
     
-    explicit GraphAdjListImpl(int V);
+    explicit GraphAdjListImpl();
     
     ~GraphAdjListImpl();
     
-    AdjacencyList<int>::AdjacencyListNode *newAdjacencyListNode(int valueOfVertex);
+    //AdjacencyList<int>::AdjacencyListNode *newAdjacencyListNode(int valueOfVertex);
     
-    void addEdge(int vertex_from, int vertex_to);
+    void addEdge(int vertex_from, int vertex_to, int vertex_weight);
     
     virtual void printGraph();
+    
+    void CreateAdjacencyListsOfGraph();
+    
+    virtual void KruskalsAlgorithm();
+    virtual void PrimsAlgorithm();
+    virtual void DijkstrasAlgorithm();
+    virtual void Ford_FulkersonAlgorithm();
     
 };

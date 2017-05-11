@@ -19,8 +19,9 @@ void displayMenu(const std::string &info, const std::string &alghoritm_1,
 
 void menu_mst() //Obsługa tabeli.
 {
-    GraphAdjListImpl gh(4);
-    Graph g;
+    
+    //GraphAdjListImpl gh(4);
+    GraphAdjListImpl g;
     std::string path;
     int option;
     do {
@@ -33,10 +34,10 @@ void menu_mst() //Obsługa tabeli.
                 break;
             case 2: //Generowanie grafu pseudolosowo.
     
-                g.readGraphFromFile("graph.txt");
+                g.CreateAdjacencyListsOfGraph();
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                g.saveToFile();
+                g.printGraph();
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
                 

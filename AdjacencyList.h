@@ -8,7 +8,8 @@
 template<class T>
 struct AdjacencyList {
     struct AdjacencyListNode {
-        T nodeValue;
+        T vertex;
+        T weight;
         AdjacencyListNode *next;
     };
     AdjacencyListNode *head;
