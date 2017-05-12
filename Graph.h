@@ -28,6 +28,7 @@ public:
     virtual ~Graph();
     
     void CreateGraphWithRandomIntegers();
+    void Graph::CreateGraphWithRandomIntegers_2();
     void ReadGraphFromFile(std::string path);
     void GenerateUndirectedGraph();
     void SaveToFile();
@@ -35,6 +36,8 @@ public:
     virtual void PrimsAlgorithm() = 0;
     virtual void DijkstrasAlgorithm() =0;
     virtual void Ford_FulkersonAlgorithm() =0;
+    
+    int GetVerticeDegree(int vertex);
 };
 
 

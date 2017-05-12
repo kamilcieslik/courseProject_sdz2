@@ -216,6 +216,90 @@ void Graph::GenerateUndirectedGraph() {
     delete[] duplicate;
 }
 
+void Graph::CreateGraphWithRandomIntegers_2() {
+    std::cout << "Podaj ilość wierzchołków: " << std::endl;
+    std::cin >> amountOfVertices;
+    if (amountOfVertices < 2) {
+        throw std::invalid_argument("Liczba wierzchołków nie może być mniejsza od 2.");
+    }
+    
+    int minimumAmountOfEdges, maximumAmountOfEdges;
+    minimumAmountOfEdges = amountOfVertices - 1;
+    maximumAmountOfEdges = ((amountOfVertices - 1) * amountOfVertices) / 2;
+    
+    auto minimumDensity = (int) ceil((((minimumAmountOfEdges * 100) / maximumAmountOfEdges)));
+    
+    double density;
+    std::cout << "Podaj gęstość grafu nie mniejszą niż " << std::to_string(minimumDensity) << " %." << std::endl;
+    std::cin >> density;
+    if (density < minimumDensity) {
+        throw std::invalid_argument(
+                "Gęstość grafu nie może być mniejsza od gęstości minimalndej - " + std::to_string(minimumDensity) +
+                " %.");
+    }
+    if (density > 100) {
+        throw std::invalid_argument("Gęstość grafu nie może być większa od 100 %.");
+    }
+    
+    amountOfEdgesInDirectedGraph = (int) ceil(maximumAmountOfEdges * (density / 100));
+    amountOfEdgesInDirectedGraph *= 2;
+    edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
+    
+    
+    std::random_device r;
+    std::mt19937 randomEngine(r());  //GENERATOR LICZB PSEUDOLOSOWYCH
+    std::uniform_int_distribution<int> edgeWeight(1, 10);    //ROWNOMIERNY ROZKLAD PRAWDOPODOBIENSTWA
+    std::uniform_int_distribution<int> randomVertice(0, amountOfVertices - 1);
+    
+    int src, dst, weight;
+    int edgesLeft = amountOfEdgesInDirectedGraph;
+    
+    edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
+    src = randomVertice(randomEngine);
+    
+    int i = 0;
+    int j = 0;
+    while (j < (amountOfVertices - 1) && edgesLeft > 0) //PIERWSZA PETLA LACZY WSZYSTKIE WIERZCHOLKI ABY GRAF BYL SPOJNY
+    {
+        do
+        {
+            dst = randomVertice(randomEngine);
+        } while (GetVerticeDegree(dst) > 0 || dst == src);  //LOSUJ WIERZCHOLEK DOCELOWY DOPOKI NIE WYLOSUJESZ NIEPOLOCZONEGO ZADNA KRAWEDZIA WIERZCHOLKA ALBO NIE WYLOSUJESZ 2 ROZNYCH WIERCHOLKOW
+        weight = edgeWeight(randomEngine);
+    
+        edgesOfDirectedGraph[i] = new int[3];
+        edgesOfDirectedGraph[i][0] = src;
+        edgesOfDirectedGraph[i][1] = dst;
+        edgesOfDirectedGraph[i][2] = weight;
+        src = dst;
+        
+        --edgesLeft;
+        j++;
+        i++;
+    }
+    
+    for (int j = 0; j < edgesLeft; ++j) //DRUGA PETLA DODAJE POZOSTALE - LOSOWE KRAWEDZIE
+    {
+        do
+        {
+            src = randomVertice(randomEngine);
+            dst = randomVertice(randomEngine);
+            weight = edgeWeight(randomEngine);
+        } while (edgeMatrix[src][dst] > 0 || dst == src);   //LOSUJ DOPOKI WYLOSUJESZ KRAWEDZ KTORA NIE ISTNIEJE
+    
+        edgesOfDirectedGraph[i] = new int[3];
+        edgesOfDirectedGraph[i][0] = src;
+        edgesOfDirectedGraph[i][1] = dst;
+        edgesOfDirectedGraph[i][2] = weight;
+        i++;
+    }
+    //PrintGraph();
+}
+
+int Graph::GetVerticeDegree(int vertex) {
+    return 0;
+}
+
 
 
 
