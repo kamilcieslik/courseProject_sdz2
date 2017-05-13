@@ -15,24 +15,41 @@ private:
         struct AdjacencyListNode {
             T vertex;
             T weight;
-            AdjacencyListNode *next= nullptr;
+            AdjacencyListNode *next;
         };
-        AdjacencyListNode *head= nullptr;
+        AdjacencyListNode *head;
     };
     
-    int numberOfEdges;
+    
+    int numberOfEdgesOfDirectedGraph;
+    int numberOfEdgesOfUndirectedGraph;
     int amountOfVertices;
     
+    AdjacencyList<int>::AdjacencyListNode *newNode;
     AdjacencyList<int> *arrayOfAdjListDirectedGraph;
+    AdjacencyList<int> *arrayOfAdjListUndirectedGraph;
 public:
     explicit AdjacencyListForGraph(int amountOfVertices);
+    
     ~AdjacencyListForGraph();
     
-    int getNumberOfElements() const;
-    
     int GetVerticeDegree(int vertex);
+    
     void AddEdgeForDirectedGraph(int vertex_from, int vertex_to, int vertex_weight);
+    
+    void AddEdgeForUndirectedGraph(int vertex_from, int vertex_to, int vertex_weight);
+    
     void PrintDirectedGraph();
+    
+    void PrintUndirectedGraph();
+    
+    void KruskalsAlgorithm();
+    
+    void PrimsAlgorithm(int **edgesOfUndirectedGraph);
+    
+    void DijkstrasAlgorithm();
+    
+    void Ford_FulkersonAlgorithm();
 };
 
 

@@ -11,37 +11,34 @@
 
 class Graph {
 private:
-
+    
     int amountOfEdgesInAdjacencyListOfDirectedGraph;
     AdjacencyListForGraph *adjacencyListForGraph;
     NeighborhoodMatrixForGraph *neighborhoodMatrixForGraph;
 protected:
-    int maximumWeight;
+    int maximumWeightOfEdge;
     int amountOfEdgesInDirectedGraph;
+    int amountOfEdgesInUndirectedGraph;
     int amountOfVertices;
     int firstVertex;
     int lastVertex;
     int **edgesOfDirectedGraph;
-    
     int **edgesOfUndirectedGraph;
-    
-    //
-    int amountOfEdgesInUndirectedGraph;
-    //
     
 public:
     Graph();
     
     virtual ~Graph();
     
+    int GetParamOfEdge(int whichVertex, int whichParam, std::string directOrUndirect);
+    
     void CreateGraphWithRandomIntegers();
+    
     void ReadGraphFromFile(std::string path);
+    
     void GenerateUndirectedGraph();
+    
     void SaveToFile();
-    //virtual void KruskalsAlgorithm() = 0;
-    //virtual void PrimsAlgorithm() = 0;
-    //virtual void DijkstrasAlgorithm() =0;
-    //virtual void Ford_FulkersonAlgorithm() =0;
 };
 
 

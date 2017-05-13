@@ -19,8 +19,6 @@ void displayMenu(const std::string &info, const std::string &alghoritm_1,
 void menu_mst() //Obsługa tabeli.
 {
     
-    //GraphAdjListImpl gh(4);
-    //GraphAdjListImpl g;
     Graph g;
     
     std::string path;
@@ -35,11 +33,13 @@ void menu_mst() //Obsługa tabeli.
                 g.CreateGraphWithRandomIntegers();
                 break;
             case 2: //Generowanie grafu pseudolosowo.
-    
+                g.ReadGraphFromFile("GraphGeneratedByProgram.txt");
                 //g.CreateAdjacencyListsForDirectedGraph();
+                
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
                // g.PrintDirectedGraph();
+                g.SaveToFile();
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
                // g.ReadGraphFromFile("undirectedGraph1.txt");
