@@ -6,8 +6,15 @@
 #define SDIZO_2_GRAPH_H
 
 #include <iostream>
+#include "AdjacencyListForGraph.h"
+#include "NeighborhoodMatrixForGraph.h"
 
 class Graph {
+private:
+
+    int amountOfEdgesInAdjacencyListOfDirectedGraph;
+    AdjacencyListForGraph *adjacencyListForGraph;
+    NeighborhoodMatrixForGraph *neighborhoodMatrixForGraph;
 protected:
     int maximumWeight;
     int amountOfEdgesInDirectedGraph;
@@ -28,16 +35,13 @@ public:
     virtual ~Graph();
     
     void CreateGraphWithRandomIntegers();
-    void Graph::CreateGraphWithRandomIntegers_2();
     void ReadGraphFromFile(std::string path);
     void GenerateUndirectedGraph();
     void SaveToFile();
-    virtual void KruskalsAlgorithm() = 0;
-    virtual void PrimsAlgorithm() = 0;
-    virtual void DijkstrasAlgorithm() =0;
-    virtual void Ford_FulkersonAlgorithm() =0;
-    
-    int GetVerticeDegree(int vertex);
+    //virtual void KruskalsAlgorithm() = 0;
+    //virtual void PrimsAlgorithm() = 0;
+    //virtual void DijkstrasAlgorithm() =0;
+    //virtual void Ford_FulkersonAlgorithm() =0;
 };
 
 

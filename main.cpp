@@ -1,6 +1,4 @@
 #include <iostream>
-#include "GraphAdjacencyListsImplementation.h"
-#include "GraphNeighborMatricesImplementation.h"
 #include "Graph.h"
 
 void displayMenu(const std::string &info, const std::string &alghoritm_1,
@@ -22,8 +20,8 @@ void menu_mst() //Obsługa tabeli.
 {
     
     //GraphAdjListImpl gh(4);
-    GraphAdjListImpl g;
-    
+    //GraphAdjListImpl g;
+    Graph g;
     
     std::string path;
     int option;
@@ -33,17 +31,18 @@ void menu_mst() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
+                //g.CreateGraphWithRandomIntegers();
                 g.CreateGraphWithRandomIntegers();
                 break;
             case 2: //Generowanie grafu pseudolosowo.
     
-                g.CreateAdjacencyListsForDirectedGraph();
+                //g.CreateAdjacencyListsForDirectedGraph();
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                g.PrintDirectedGraph();
+               // g.PrintDirectedGraph();
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
-                g.ReadGraphFromFile("undirectedGraph1.txt");
+               // g.ReadGraphFromFile("undirectedGraph1.txt");
                 //g.SaveToFileDirectedGraph();
                 //g.SaveToFileUndirectedGraph();
                 break;
@@ -65,7 +64,7 @@ void menu_mst() //Obsługa tabeli.
 
 void menu_the_shortest_path() //Obsługa tabeli.
 {
-    GraphNghbMatricesImpl g2;
+    //GraphNghbMatricesImpl g2;
     std::string path;
     int option;
     do {
@@ -74,13 +73,13 @@ void menu_the_shortest_path() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                g2.CreateGraphWithRandomIntegers();
+               // g2.CreateGraphWithRandomIntegers();
                 break;
             case 2: //Generowanie grafu pseudolosowo.
-                g2.CreateNeighborMatricesForDirectedGraph();
+                //g2.CreateNeighborMatricesForDirectedGraph();
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                g2.PrintDirectedGraph();
+                //g2.PrintDirectedGraph();
                 break;
             case 4: //Algorytm 1. - Dijkstry (macierzowo i listowo).
                 

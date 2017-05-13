@@ -4,14 +4,12 @@ project(sdizo_2)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
-    AdjacencyList.h
-    AGraph.h
-    GraphAdjacencyListsImplementation.cpp
-    GraphAdjacencyListsImplementation.h
-    GraphNeighborMatricesImplementation.cpp
-    GraphNeighborMatricesImplementation.h
-    Graph.cpp
+        Graph.cpp
     Graph.h
+        AdjacencyListForGraph.cpp
+        AdjacencyListForGraph.h
+        NeighborhoodMatrixForGraph.cpp
+        NeighborhoodMatrixForGraph.h
         main.cpp)
 
 add_executable(sdizo_2 ${SOURCE_FILES})
