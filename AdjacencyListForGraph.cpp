@@ -119,62 +119,38 @@ void AdjacencyListForGraph::PrintUndirectedGraph() {
     }
 }
 
-void AdjacencyListForGraph::PrimsAlgorithm(int **edgesOfUndirectedGraph) {
-    /*//int V = graph->V;// Get the number of vertices in graph AMOUNT OF GRTAPH
-    int parent[amountOfVertices];   // Array to store constructed MST
-    int key[amountOfVertices];      // Key values used to pick minimum weight edge in cut
+void AdjacencyListForGraph::PrimsAlgorithm(int **edgesOfUndirectedGraph, int firstVertex) {
+    Heap heapForEdges(amountOfVertices);
+    bool *visited = new bool[amountOfVertices];
     
-    // minHeap represents set E
-    struct MinHeap* minHeap = createMinHeap(V);
-    
-    // Initialize min heap with all vertices. Key value of
-    // all vertices (except 0th vertex) is initially infinite
-    for (int v = 1; v < amountOfVertices; ++v)
-    {
-        parent[v] = -1;
-        key[v] = INT_MAX;
-        minHeap->array[v] = newMinHeapNode(v, key[v]);
-        minHeap->pos[v] = v;
+    for(auto i=0; i<amountOfVertices; i++){
+        visited[i]=false;
     }
     
-    // Make key value of 0th vertex as 0 so that it
-    // is extracted first
-    key[0] = 0;
-    minHeap->array[0] = newMinHeapNode(0, key[0]);
-    minHeap->pos[0]   = 0;
+    int vertex=firstVertex;
+    visited[vertex]=true;
     
-    // Initially size of min heap is equal to V
-    minHeap->size = amountOfVertices;
-    
-    // In the followin loop, min heap contains all nodes
-    // not yet added to MST.
-    while (!isEmpty(minHeap))
-    {
-        // Extract the vertex with minimum key value
-        struct MinHeapNode* minHeapNode = extractMin(minHeap);
-        int u = minHeapNode->v; // Store the extracted vertex number
-        
-        // Traverse through all adjacent vertices of u (the extracted
-        // vertex) and update their key values
-        struct AdjListNode* pCrawl = graph->array[u].head;
-        while (pCrawl != NULL)
-        {
-            int v = pCrawl->dest;
-            
-            // If v is not yet included in MST and weight of u-v is
-            // less than key value of v, then update key value and
-            // parent of v
-            if (isInMinHeap(minHeap, v) && pCrawl->weight < key[v])
+    Edge edge;
+    for (auto i=1;i<amountOfVertices;i++){
+        auto pointerToNodesOfAdjacencyList = arrayOfAdjListUndirectedGraph[vertex].head;
+        while (pointerToNodesOfAdjacencyList!=nullptr){
+            if (!visited[pointerToNodesOfAdjacencyList->vertex])
             {
-                key[v] = pCrawl->weight;
-                parent[v] = u;
-                decreaseKey(minHeap, v, key[v]);
+                edge.vertex_from=vertex;
+                edge.vertex_to=pointerToNodesOfAdjacencyList->vertex;
+                edge.edge_weight=pointerToNodesOfAdjacencyList->weight;
+                heapForEdges.AddEdge(edge, edge.edge_weight);
             }
-            pCrawl = pCrawl->next;
+            pointerToNodesOfAdjacencyList=pointerToNodesOfAdjacencyList->next;
         }
-    }
     
-    // print edges of MST
-    printArr(parent, V);*/
+        do
+        {
+         edge=heapForEdges.GetEdgeFromTheBeginning();
+            heapForEdges.DeleteEdgeFromTheTop();
+        }while(visited[edge.vertex_to]);
+        
+        //tutaj lista sąsiedztwa na wyniki
+    }
 }
 

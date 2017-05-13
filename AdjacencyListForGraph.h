@@ -6,6 +6,7 @@
 #define SDIZO_2_ADJACENCYLISTFORGRAPH_H
 
 #include <iostream>
+#include "UsefulStructuresForAlgorithms.h"
 
 
 class AdjacencyListForGraph {
@@ -45,7 +46,7 @@ public:
     
     void KruskalsAlgorithm();
     
-    void PrimsAlgorithm(int **edgesOfUndirectedGraph);
+    void PrimsAlgorithm(int **edgesOfUndirectedGraph, int firstVertex);
     
     void DijkstrasAlgorithm();
     

@@ -5,11 +5,13 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
         Graph.cpp
-    Graph.h
+        Graph.h
         AdjacencyListForGraph.cpp
         AdjacencyListForGraph.h
         NeighborhoodMatrixForGraph.cpp
         NeighborhoodMatrixForGraph.h
+        UsefulStructuresForAlgorithms.cpp
+        UsefulStructuresForAlgorithms.h
         main.cpp)
 
 add_executable(sdizo_2 ${SOURCE_FILES})
