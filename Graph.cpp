@@ -7,11 +7,12 @@
 #include <random>
 #include <fstream>
 
-Graph::Graph() : maximumWeightOfEdge(9), amountOfEdgesInAdjacencyListOfDirectedGraph(0) {
-
+Graph::Graph() : maximumWeightOfEdge(9), amountOfEdgesInAdjacencyListOfDirectedGraph(0), adjacencyListForGraph(nullptr),
+                 neighborhoodMatrixForGraph(nullptr), edgesOfDirectedGraph(nullptr), edgesOfUndirectedGraph(nullptr) {
+    
 }
 
-Graph::~Graph() {
+void Graph::DeleteGraph() {
     for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
         delete[] edgesOfDirectedGraph[i];
     }
@@ -29,13 +30,19 @@ Graph::~Graph() {
     
     edgesOfDirectedGraph = nullptr;
     edgesOfUndirectedGraph = nullptr;
-    
-    
+}
+
+
+Graph::~Graph() {
+    DeleteGraph();
 }
 
 
 void Graph::ReadGraphFromFile(std::string path) {
-    
+    if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr ||
+        edgesOfUndirectedGraph != nullptr) {
+        DeleteGraph();
+    }
     std::fstream file(path, std::ios::in);
     if (file.is_open()) {
         file >> amountOfEdgesInDirectedGraph;
@@ -69,12 +76,16 @@ void Graph::ReadGraphFromFile(std::string path) {
         
         GenerateUndirectedGraph();
         
+        std::cout << "Reprezentacja listowa grafu skierowanego:\n\n";
         adjacencyListForGraph->PrintDirectedGraph();
         std::cout << std::endl;
+        std::cout << "Reprezentacja macierzowa grafu skierowanego:\n\n";
         neighborhoodMatrixForGraph->PrintDirectedGraph();
         std::cout << std::endl;
+        std::cout << "Reprezentacja listowa grafu nieskierowanego:\n\n";
         adjacencyListForGraph->PrintUndirectedGraph();
         std::cout << std::endl;
+        std::cout << "Reprezentacja macierzowa grafu nieskierowanego:\n\n";
         neighborhoodMatrixForGraph->PrintUndirectedGraph();
     }
 }
@@ -134,6 +145,10 @@ void Graph::GenerateUndirectedGraph() {
 }
 
 void Graph::CreateGraphWithRandomIntegers() {
+    if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr ||
+        edgesOfUndirectedGraph != nullptr) {
+        DeleteGraph();
+    }
     std::cout << "Podaj ilość wierzchołków: " << std::endl;
     std::cin >> amountOfVertices;
     if (amountOfVertices < 2) {
@@ -227,25 +242,31 @@ void Graph::CreateGraphWithRandomIntegers() {
     
     GenerateUndirectedGraph();
     
+    std::cout << "Reprezentacja listowa grafu skierowanego:\n\n";
     adjacencyListForGraph->PrintDirectedGraph();
     std::cout << std::endl;
+    std::cout << "Reprezentacja macierzowa grafu skierowanego:\n\n";
     neighborhoodMatrixForGraph->PrintDirectedGraph();
     std::cout << std::endl;
+    std::cout << "Reprezentacja listowa grafu nieskierowanego:\n\n";
     adjacencyListForGraph->PrintUndirectedGraph();
     std::cout << std::endl;
+    std::cout << "Reprezentacja macierzowa grafu nieskierowanego:\n\n";
     neighborhoodMatrixForGraph->PrintUndirectedGraph();
 }
 
 int Graph::GetParamOfEdge(int whichVertex, int whichParam, std::string directOrUndirect) {
-    if (directOrUndirect=="direct")
-    {
+    if (directOrUndirect == "direct") {
         return edgesOfDirectedGraph[whichVertex][whichParam];
-    }
-    else
-    {
+    } else {
         return edgesOfUndirectedGraph[whichVertex][whichParam];
     }
 }
+
+void Graph::PrimsAlgorithmForAdjacencyListGraph() {
+    adjacencyListForGraph->PrimsAlgorithm(edgesOfUndirectedGraph, firstVertex, amountOfEdgesInUndirectedGraph);
+}
+
 
 
 

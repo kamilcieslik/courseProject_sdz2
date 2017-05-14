@@ -50,7 +50,6 @@ int NeighborhoodMatrixForGraph::GetWeightOfEdge(int vertex_from, int vertex_to) 
 }
 
 void NeighborhoodMatrixForGraph::PrintDirectedGraph() {
-    std::cout << "Reprezentacja macierzowa grafu skierowanego:\n\n";
     for (int i = 0; i < amountOfVertices; i++) {
         for (int j = 0; j < amountOfVertices; j++) {
             std::cout << arrayOfMatrixDirectedGraph[i][j] << " ";
@@ -60,7 +59,6 @@ void NeighborhoodMatrixForGraph::PrintDirectedGraph() {
 }
 
 void NeighborhoodMatrixForGraph::PrintUndirectedGraph() {
-    std::cout << "Reprezentacja macierzowa grafu nieskierowanego:\n\n";
     for (int i = 0; i < amountOfVertices; i++) {
         for (int j = 0; j < amountOfVertices; j++) {
             std::cout << arrayOfMatrixUndirectedGraph[i][j] << " ";

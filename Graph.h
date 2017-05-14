@@ -30,6 +30,8 @@ public:
     
     virtual ~Graph();
     
+    void DeleteGraph();
+    
     int GetParamOfEdge(int whichVertex, int whichParam, std::string directOrUndirect);
     
     void CreateGraphWithRandomIntegers();
@@ -39,6 +41,8 @@ public:
     void GenerateUndirectedGraph();
     
     void SaveToFile();
+    
+    void PrimsAlgorithmForAdjacencyListGraph();
 };
 
 

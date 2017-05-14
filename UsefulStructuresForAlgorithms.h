@@ -17,7 +17,6 @@ class Heap {
 private:
     int numberOfEdges;
     Edge *arrayOfEdges;
-    Edge *newEdge;
 public:
     Heap(int numberOfEdges);
     

@@ -29,22 +29,17 @@ void menu_mst() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                //g.CreateGraphWithRandomIntegers();
-                g.CreateGraphWithRandomIntegers();
+                g.ReadGraphFromFile("GraphGeneratedByProgram.txt");
                 break;
             case 2: //Generowanie grafu pseudolosowo.
-                g.ReadGraphFromFile("GraphGeneratedByProgram.txt");
-                //g.CreateAdjacencyListsForDirectedGraph();
-                
+                g.CreateGraphWithRandomIntegers();
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-               // g.PrintDirectedGraph();
+                // g.PrintDirectedGraph();
                 g.SaveToFile();
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
-               // g.ReadGraphFromFile("undirectedGraph1.txt");
-                //g.SaveToFileDirectedGraph();
-                //g.SaveToFileUndirectedGraph();
+                g.PrimsAlgorithmForAdjacencyListGraph();
                 break;
             
             case 5: //Algorytm 2. - Kruskala (macierzowo i listowo).
@@ -64,7 +59,7 @@ void menu_mst() //Obsługa tabeli.
 
 void menu_the_shortest_path() //Obsługa tabeli.
 {
-    //GraphNghbMatricesImpl g2;
+    Graph g;
     std::string path;
     int option;
     do {
@@ -73,10 +68,10 @@ void menu_the_shortest_path() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-               // g2.CreateGraphWithRandomIntegers();
+                g.ReadGraphFromFile("GraphGeneratedByProgram.txt");
                 break;
             case 2: //Generowanie grafu pseudolosowo.
-                //g2.CreateNeighborMatricesForDirectedGraph();
+                g.CreateGraphWithRandomIntegers();
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
                 //g2.PrintDirectedGraph();
