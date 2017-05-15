@@ -4,7 +4,6 @@
 
 #include <climits>
 #include "AdjacencyListForGraph.h"
-#include "list"
 
 AdjacencyListForGraph::AdjacencyListForGraph(int amountOfVertices) : numberOfEdgesOfDirectedGraph(0),
                                                                      numberOfEdgesOfUndirectedGraph(0) {
@@ -90,7 +89,6 @@ int AdjacencyListForGraph::GetVerticeDegree(int vertex) {
 }
 
 void AdjacencyListForGraph::PrintDirectedGraph() {
-    std::cout << "Reprezentacja listowa grafu skierowanego:\n\n";
     for (auto i = 0; i < amountOfVertices; ++i) {
         auto pointerToNodesOfAdjacencyList = arrayOfAdjListDirectedGraph[i].head;
         std::cout << "Adj[" << i << "]: ";
@@ -105,7 +103,6 @@ void AdjacencyListForGraph::PrintDirectedGraph() {
 }
 
 void AdjacencyListForGraph::PrintUndirectedGraph() {
-    std::cout << "Reprezentacja listowa grafu nieskierowanego:\n\n";
     for (auto i = 0; i < amountOfVertices; ++i) {
         auto pointerToNodesOfAdjacencyList = arrayOfAdjListUndirectedGraph[i].head;
         std::cout << "Adj[" << i << "]: ";
@@ -119,10 +116,8 @@ void AdjacencyListForGraph::PrintUndirectedGraph() {
     }
 }
 
-void AdjacencyListForGraph::PrimsAlgorithm(int **edgesOfUndirectedGraph, int firstVertex, int amp) {
-    
-    
-    Heap heapForEdges(amp);
+void AdjacencyListForGraph::PrimsAlgorithm(int firstVertex) {
+    Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     bool *visited = new bool[amountOfVertices];
     
     for (auto i = 0; i < amountOfVertices; i++) {
@@ -132,30 +127,31 @@ void AdjacencyListForGraph::PrimsAlgorithm(int **edgesOfUndirectedGraph, int fir
     int vertex = firstVertex;
     visited[vertex] = true;
     
+    int weightOfMST=0;
     Edge edge;
     for (auto i = 1; i < amountOfVertices; i++) {
         
-        for (auto p = arrayOfAdjListUndirectedGraph[vertex].head; p; p = p->next) {// Przeglądamy listę sąsiadów
-            if (!visited[p->vertex])          // Jeśli sąsiad jest nieodwiedzony,
+        for (auto p = arrayOfAdjListUndirectedGraph[vertex].head; p; p = p->next) { //change to while loop?
+            if (!visited[p->vertex])
             {
-                edge.vertex_from = vertex;                 // to tworzymy krawędź
+                edge.vertex_from = vertex;
                 edge.vertex_to = p->vertex;
                 edge.edge_weight = p->weight;
-                heapForEdges.AddEdge(edge, edge.edge_weight);          // Dodajemy ją do kolejki priorytetowej
+                heapForEdges.AddEdge(edge, edge.edge_weight);
             }
         }
-        
         do {
             edge = heapForEdges.GetEdgeFromTheBeginning();
             heapForEdges.DeleteEdgeFromTheTop();
         } while (visited[edge.vertex_to]);
     
         std::cout << "(" << edge.vertex_from << "," << edge.vertex_to << ")   " << edge.edge_weight << std::endl;
+        weightOfMST+=edge.edge_weight;
         
         visited[edge.vertex_to]=true;
         vertex=edge.vertex_to;
-        
     }
     delete[] visited;
+    std::cout << "Waga MST: " << weightOfMST << std::endl;
 }
 
