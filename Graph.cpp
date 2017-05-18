@@ -264,7 +264,7 @@ int Graph::GetParamOfEdge(int whichVertex, int whichParam, std::string directOrU
 }
 
 void Graph::PrimsAlgorithmForAdjacencyListGraph() {
-    adjacencyListForGraph->PrimsAlgorithm(edgesOfUndirectedGraph, firstVertex, amountOfEdgesInUndirectedGraph);
+    //adjacencyListForGraph->PrimsAlgorithm(edgesOfUndirectedGraph, firstVertex, amountOfEdgesInUndirectedGraph);
 }
 
 

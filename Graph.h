@@ -13,9 +13,6 @@ class Graph {
 private:
     
     int amountOfEdgesInAdjacencyListOfDirectedGraph;
-    AdjacencyListForGraph *adjacencyListForGraph;
-    NeighborhoodMatrixForGraph *neighborhoodMatrixForGraph;
-protected:
     int maximumWeightOfEdge;
     int amountOfEdgesInDirectedGraph;
     int amountOfEdgesInUndirectedGraph;
@@ -26,6 +23,9 @@ protected:
     int **edgesOfUndirectedGraph;
     
 public:
+    AdjacencyListForGraph *adjacencyListForGraph;
+    NeighborhoodMatrixForGraph *neighborhoodMatrixForGraph;
+    
     Graph();
     
     virtual ~Graph();

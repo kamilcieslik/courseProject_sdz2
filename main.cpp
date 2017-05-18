@@ -39,7 +39,9 @@ void menu_mst() //Obsługa tabeli.
                 g.SaveToFile();
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
-                g.PrimsAlgorithmForAdjacencyListGraph();
+            std::cout << "MST -> algorytm Prima - listowo: " << std::endl;
+                g.adjacencyListForGraph->PrimsAlgorithm(0);
+                
                 break;
             
             case 5: //Algorytm 2. - Kruskala (macierzowo i listowo).

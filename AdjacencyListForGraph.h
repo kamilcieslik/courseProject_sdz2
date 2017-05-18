@@ -46,7 +46,7 @@ public:
     
     void KruskalsAlgorithm();
     
-    void PrimsAlgorithm(int **edgesOfUndirectedGraph, int firstVertex, int amp);
+    void PrimsAlgorithm(int firstVertex);
     
     void DijkstrasAlgorithm();
     
