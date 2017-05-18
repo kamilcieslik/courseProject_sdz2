@@ -6,7 +6,7 @@
 #define SDIZO_2_NEIGHBORHOODMATRIXFORGRAPH_H
 
 #include <iostream>
-
+#include "UsefulStructuresForAlgorithms.h"
 
 class NeighborhoodMatrixForGraph {
 private:
@@ -15,7 +15,10 @@ private:
     int numberOfEdgesOfDirectedGraph;
     int numberOfEdgesOfUndirectedGraph;
     int amountOfVertices;
-
+    
+    Edge *MST_Prim;
+    int weightOfMST;
+    
 public:
     explicit NeighborhoodMatrixForGraph(int amountOfVertices);
     
@@ -32,11 +35,13 @@ public:
     
     void KruskalsAlgorithm();
     
-    void PrimsAlgorithm();
+    void PrimsAlgorithm(int firstVertex);
     
     void DijkstrasAlgorithm();
     
     void Ford_FulkersonAlgorithm();
+    
+    void PrintMST_Prim();
     
 };
 

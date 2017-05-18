@@ -8,9 +8,10 @@
 #include <iostream>
 
 struct Edge {
-    int vertex_from;
-    int vertex_to;
-    int edge_weight;
+    int vertex_from=0;
+    int vertex_to=0;
+    int edge_weight=0;
+    void AddEdge(int vertex_from, int vertex_to, int edge_weight);
 };
 
 class Heap {
@@ -18,7 +19,7 @@ private:
     int numberOfEdges;
     Edge *arrayOfEdges;
 public:
-    Heap(int numberOfEdges);
+    Heap();
     
     ~Heap();
     

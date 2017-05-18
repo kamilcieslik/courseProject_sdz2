@@ -4,21 +4,31 @@
 
 #include "UsefulStructuresForAlgorithms.h"
 
-Heap::Heap(int numberOfEdges):numberOfEdges(0) {
-    arrayOfEdges=new Edge[numberOfEdges];
-    //this->numberOfEdges=numberOfEdges;
+Heap::Heap() {
+    arrayOfEdges = new Edge[0];
+    this->numberOfEdges = 0;
 }
 
 Heap::~Heap() {
     delete[] arrayOfEdges;
-    numberOfEdges=0;
+    numberOfEdges = 0;
+    arrayOfEdges = nullptr;
 }
 
-Edge Heap::GetEdgeFromTheBeginning(){
+Edge Heap::GetEdgeFromTheBeginning() {
     return arrayOfEdges[0];
 }
 
 void Heap::AddEdge(Edge newEdge, int edge_weight) {
+    
+    Edge *temporaryTable;
+    temporaryTable = new Edge[numberOfEdges + 1];
+    for (int i = 0; i < numberOfEdges; i++) {
+        temporaryTable[i] = arrayOfEdges[i];
+    }
+    delete[] arrayOfEdges;
+    arrayOfEdges = temporaryTable;
+    
     int i, j;
     i = numberOfEdges++;
     j = (i - 1) / 2;
@@ -56,9 +66,21 @@ void Heap::DeleteEdgeFromTheTop() {
             j = 2 * j + 1;
         }
         
-        arrayOfEdges[i]=lastLeaf;
+        arrayOfEdges[i] = lastLeaf;
         
+        Edge *temporaryTable;
+        temporaryTable = new Edge[numberOfEdges];
+        for (auto k = 0; k < numberOfEdges; k++) {
+            temporaryTable[k] = arrayOfEdges[k];
+        }
+        delete[]arrayOfEdges;
+        arrayOfEdges = temporaryTable;
     }
 }
 
 
+void Edge::AddEdge(int vertex_from, int vertex_to, int edge_weight) {
+    this->vertex_from=vertex_from;
+    this->vertex_to=vertex_to;
+    this->edge_weight=edge_weight;
+}

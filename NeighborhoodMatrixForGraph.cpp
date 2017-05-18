@@ -5,7 +5,8 @@
 #include "NeighborhoodMatrixForGraph.h"
 
 NeighborhoodMatrixForGraph::NeighborhoodMatrixForGraph(int amountOfVertices) : numberOfEdgesOfDirectedGraph(0),
-                                                                               numberOfEdgesOfUndirectedGraph(0) {
+                                                                               numberOfEdgesOfUndirectedGraph(0),
+                                                                               MST_Prim(nullptr) {
     this->amountOfVertices = amountOfVertices;
     arrayOfMatrixDirectedGraph = new int *[amountOfVertices];
     arrayOfMatrixUndirectedGraph = new int *[amountOfVertices];
@@ -32,6 +33,9 @@ NeighborhoodMatrixForGraph::~NeighborhoodMatrixForGraph() {
     delete[] arrayOfMatrixUndirectedGraph;
     arrayOfMatrixDirectedGraph = nullptr;
     arrayOfMatrixUndirectedGraph = nullptr;
+    
+    delete[] MST_Prim;
+    MST_Prim = nullptr;
 }
 
 void NeighborhoodMatrixForGraph::AddEdgeForDirectedGraph(int vertex_from, int vertex_to, int edge_weight) {
@@ -65,6 +69,57 @@ void NeighborhoodMatrixForGraph::PrintUndirectedGraph() {
         }
         std::cout << std::endl;
     }
+}
+
+void NeighborhoodMatrixForGraph::PrimsAlgorithm(int firstVertex) {
+    Heap heapForEdges;
+    bool *visited = new bool[amountOfVertices];
+    
+    for (auto i = 0; i < amountOfVertices; i++) {
+        visited[i] = false;
+    }
+    
+    int vertex = firstVertex;
+    visited[vertex] = true;
+    
+    weightOfMST = 0;
+    if (MST_Prim != nullptr) {
+        delete[] MST_Prim;
+        MST_Prim = nullptr;
+    }
+    MST_Prim = new Edge[amountOfVertices - 1];
+    Edge edge;
+    for (auto i = 1; i < amountOfVertices; i++) {
+        for (int j = 0; j < amountOfVertices; j++) {
+            if (arrayOfMatrixUndirectedGraph[vertex][j] != 0 && arrayOfMatrixUndirectedGraph[vertex][j] < 11 &&
+                visited[j] == false) {
+                edge.vertex_from = vertex;
+                edge.vertex_to = j;
+                edge.edge_weight = arrayOfMatrixUndirectedGraph[vertex][j];
+                heapForEdges.AddEdge(edge, edge.edge_weight);
+            }
+        }
+        
+        do {
+            edge = heapForEdges.GetEdgeFromTheBeginning();
+            heapForEdges.DeleteEdgeFromTheTop();
+        } while (visited[edge.vertex_to]);
+        
+        MST_Prim[i - 1].AddEdge(edge.vertex_from, edge.vertex_to, edge.edge_weight);
+        weightOfMST += edge.edge_weight;
+        
+        visited[edge.vertex_to] = true;
+        vertex = edge.vertex_to;
+    }
+    delete[] visited;
+}
+
+void NeighborhoodMatrixForGraph::PrintMST_Prim() {
+    for (auto i = 0; i < amountOfVertices - 1; i++) {
+        std::cout << "(" << MST_Prim[i].vertex_from << "," << MST_Prim[i].vertex_to << ")   " << MST_Prim[i].edge_weight
+                  << std::endl;
+    }
+    std::cout << "Waga MST: " << weightOfMST << std::endl;
 }
 
 

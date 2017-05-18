@@ -29,6 +29,10 @@ private:
     AdjacencyList<int>::AdjacencyListNode *newNode;
     AdjacencyList<int> *arrayOfAdjListDirectedGraph;
     AdjacencyList<int> *arrayOfAdjListUndirectedGraph;
+    
+    Edge *MST_Prim;
+    int weightOfMST;
+    
 public:
     explicit AdjacencyListForGraph(int amountOfVertices);
     
@@ -51,6 +55,8 @@ public:
     void DijkstrasAlgorithm();
     
     void Ford_FulkersonAlgorithm();
+    
+    void PrintMST_Prim();
 };
 
 
