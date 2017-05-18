@@ -114,12 +114,54 @@ void NeighborhoodMatrixForGraph::PrimsAlgorithm(int firstVertex) {
     delete[] visited;
 }
 
-void NeighborhoodMatrixForGraph::PrintMST_Prim() {
+void NeighborhoodMatrixForGraph::KruskalsAlgorithm(int firstVertex) {
+    Heap heapForEdges;
+    DisjointSetDataStructure disjointSetForVertex(amountOfVertices);
+    
+    for (auto i = 0; i < amountOfVertices; i++) {
+        disjointSetForVertex.Init(i);
+    }
+    
+    int vertex = firstVertex;
+    Edge edge;
+    
+    for (int i = vertex; i < amountOfVertices; i++) {
+        for (int j = 0; j < amountOfVertices; j++) {
+            if (arrayOfMatrixUndirectedGraph[i][j] != 0 && arrayOfMatrixUndirectedGraph[i][j] < 11) {
+                edge.vertex_from = i;
+                edge.vertex_to = j;
+                edge.edge_weight = arrayOfMatrixUndirectedGraph[i][j];
+                heapForEdges.AddEdge(edge, edge.edge_weight);
+            }
+        }
+    }
+    
+    weightOfMST = 0;
+    if (MST_Prim != nullptr) {
+        delete[] MST_Prim;
+        MST_Prim = nullptr;
+    }
+    MST_Prim = new Edge[amountOfVertices - 1];
+    for (auto i = 1; i < amountOfVertices; i++) {
+        do {
+            edge = heapForEdges.GetEdgeFromTheBeginning();
+            heapForEdges.DeleteEdgeFromTheTop();
+        } while (disjointSetForVertex.FindParent(edge.vertex_from) == disjointSetForVertex.FindParent(edge.vertex_to));
+        
+        MST_Prim[i - 1].AddEdge(edge.vertex_from, edge.vertex_to, edge.edge_weight);
+        weightOfMST += edge.edge_weight;
+        disjointSetForVertex.Union(edge.vertex_from, edge.vertex_to);
+    }
+}
+
+void NeighborhoodMatrixForGraph::PrintMST() {
     for (auto i = 0; i < amountOfVertices - 1; i++) {
         std::cout << "(" << MST_Prim[i].vertex_from << "," << MST_Prim[i].vertex_to << ")   " << MST_Prim[i].edge_weight
                   << std::endl;
     }
     std::cout << "Waga MST: " << weightOfMST << std::endl;
 }
+
+
 
 

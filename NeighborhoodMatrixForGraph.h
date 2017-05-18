@@ -33,7 +33,7 @@ public:
     
     void PrintUndirectedGraph();
     
-    void KruskalsAlgorithm();
+    void KruskalsAlgorithm(int firstVertex);
     
     void PrimsAlgorithm(int firstVertex);
     
@@ -41,7 +41,7 @@ public:
     
     void Ford_FulkersonAlgorithm();
     
-    void PrintMST_Prim();
+    void PrintMST();
     
 };
 

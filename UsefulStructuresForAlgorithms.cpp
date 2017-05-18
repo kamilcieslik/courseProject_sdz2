@@ -80,7 +80,57 @@ void Heap::DeleteEdgeFromTheTop() {
 
 
 void Edge::AddEdge(int vertex_from, int vertex_to, int edge_weight) {
-    this->vertex_from=vertex_from;
-    this->vertex_to=vertex_to;
-    this->edge_weight=edge_weight;
+    this->vertex_from = vertex_from;
+    this->vertex_to = vertex_to;
+    this->edge_weight = edge_weight;
+}
+
+
+
+DisjointSetDataStructure::DisjointSetDataStructure(int numberOfNodes) {
+    disjointSetTree = new DisjointSetDataStructure::NodeOfDisjointSetDataStructure[numberOfNodes];
+}
+
+DisjointSetDataStructure::~DisjointSetDataStructure() {
+    delete[] disjointSetTree;
+}
+
+/*
+ * Na początku każdy z elementów tworzy osobny zbiór, w którym jest reprezentanem (ojcem).
+ * Koszt przejścia do reprezentanta (samego siebie) równy zero.
+ */
+void DisjointSetDataStructure::Init(int vertex) {
+    disjointSetTree[vertex].parent = vertex;
+    disjointSetTree[vertex].rank = 0;
+}
+
+/*
+ * Wyszukiwanie reprezentanta + kompresja ścieżek.
+ * Wszystkie elementy zostaną podłączone "bezpośrednio" do reprezentanta zbioru -> skrócenie czasu wyszukiwania.
+ */
+int DisjointSetDataStructure::FindParent(int vertex) {
+    if (disjointSetTree[vertex].parent != vertex)
+        disjointSetTree[vertex].parent = FindParent(
+                disjointSetTree[vertex].parent);
+    return disjointSetTree[vertex].parent;
+}
+
+/*
+ * Łączenie zbiorów.
+ * W funkcji odbywa się wybór kierunku łączenia.
+ * Różne rangi: zbiór niższy do wyższego -> brak zmian rangi, wysokość drzewa nie zmienia się.
+ * Rangi równe: wysokość jednego ze zbiorów zwiększa się o jeden -> zwiększenie rangi.
+ */
+void DisjointSetDataStructure::Union(int vertex_from, int vertex_to) {
+    int parent_vertex_from = FindParent(vertex_from);
+    int parent_vertex_to = FindParent(vertex_to);
+    if (disjointSetTree[parent_vertex_from].rank < disjointSetTree[parent_vertex_to].rank) {
+        disjointSetTree[parent_vertex_from].parent = parent_vertex_to;
+    } else {
+        disjointSetTree[parent_vertex_to].parent = parent_vertex_from;
+    }
+    
+    if (disjointSetTree[parent_vertex_from].rank == disjointSetTree[parent_vertex_to].rank) {
+        disjointSetTree[parent_vertex_from].rank += 1;
+    }
 }

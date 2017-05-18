@@ -48,15 +48,15 @@ public:
     
     void PrintUndirectedGraph();
     
-    void KruskalsAlgorithm();
-    
     void PrimsAlgorithm(int firstVertex);
+    
+    void KruskalsAlgorithm(int firstVertex);
     
     void DijkstrasAlgorithm();
     
     void Ford_FulkersonAlgorithm();
     
-    void PrintMST_Prim();
+    void PrintMST();
 };
 
 

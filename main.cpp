@@ -30,26 +30,36 @@ void menu_mst() //Obsługa tabeli.
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
                 g.ReadGraphFromFile("GraphGeneratedByProgram.txt");
+                
                 break;
             case 2: //Generowanie grafu pseudolosowo.
                 g.CreateGraphWithRandomIntegers();
+                
                 break;
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
                 // g.PrintDirectedGraph();
                 g.SaveToFile();
+                
                 break;
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
                 g.adjacencyListForGraph->PrimsAlgorithm(0);
                 std::cout << "MST -> algorytm Prima - listowo: " << std::endl;
-                g.adjacencyListForGraph->PrintMST_Prim();
+                g.adjacencyListForGraph->PrintMST();
                 g.neighborhoodMatrixForGraph->PrimsAlgorithm(0);
                 std::cout << std::endl;
                 std::cout << "MST -> algorytm Prima - macierzowo: " << std::endl;
-                g.neighborhoodMatrixForGraph->PrintMST_Prim();
+                g.neighborhoodMatrixForGraph->PrintMST();
                 
                 break;
             
             case 5: //Algorytm 2. - Kruskala (macierzowo i listowo).
+                g.adjacencyListForGraph->KruskalsAlgorithm(0);
+                std::cout << "MST -> algorytm Kruskala - listowo: " << std::endl;
+                g.adjacencyListForGraph->PrintMST();
+                g.neighborhoodMatrixForGraph->KruskalsAlgorithm(0);
+                std::cout << std::endl;
+                std::cout << "MST -> algorytm Kruskala - macierzowo: " << std::endl;
+                g.neighborhoodMatrixForGraph->PrintMST();
                 
                 break;
             
