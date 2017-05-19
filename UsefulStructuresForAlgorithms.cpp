@@ -78,6 +78,10 @@ void Heap::DeleteEdgeFromTheTop() {
     }
 }
 
+int Heap::getAmountOfEdges() {
+    return numberOfEdges;
+}
+
 
 void Edge::AddEdge(int vertex_from, int vertex_to, int edge_weight) {
     this->vertex_from = vertex_from;

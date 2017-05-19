@@ -7,18 +7,21 @@
 #include <random>
 #include <fstream>
 
-Graph::Graph() : maximumWeightOfEdge(9), amountOfEdgesInAdjacencyListOfDirectedGraph(0), adjacencyListForGraph(nullptr),
+Graph::Graph() : maximumWeightOfEdge(9), amountOfEdgesInAdjacencyListOfDirectedGraph(0),
+                 amountOfEdgesInDirectedGraph(0), amountOfEdgesInUndirectedGraph(0), adjacencyListForGraph(nullptr),
                  neighborhoodMatrixForGraph(nullptr), edgesOfDirectedGraph(nullptr), edgesOfUndirectedGraph(nullptr) {
     
 }
 
 void Graph::DeleteGraph() {
-    for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
-        delete[] edgesOfDirectedGraph[i];
-    }
-    for (int i = 0; i < amountOfEdgesInUndirectedGraph; i++) {
-        delete[] edgesOfUndirectedGraph[i];
-    }
+    if (amountOfEdgesInDirectedGraph!=0)
+        for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
+            delete[] edgesOfDirectedGraph[i];
+        }
+    if (amountOfEdgesInUndirectedGraph!=0)
+        for (int i = 0; i < amountOfEdgesInUndirectedGraph; i++) {
+            delete[] edgesOfUndirectedGraph[i];
+        }
     delete[] edgesOfDirectedGraph;
     delete[] edgesOfUndirectedGraph;
     
@@ -91,7 +94,7 @@ void Graph::ReadGraphFromFile(std::string path) {
 }
 
 void Graph::SaveToFile() {
-    std::fstream file("GraphGeneratedByProgram.txt", std::ios::out);
+    std::fstream file("GraphGeneratedByProgram2.txt", std::ios::out);
     if (file.good()) {
         file << amountOfEdgesInDirectedGraph << " " << amountOfVertices << " " << firstVertex << " "
              << lastVertex << "\n";

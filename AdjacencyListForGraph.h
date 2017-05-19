@@ -33,6 +33,11 @@ private:
     Edge *MST_Prim;
     int weightOfMST;
     
+    int *d;
+    int *p;
+    int *S;
+    int sptr;
+    
 public:
     explicit AdjacencyListForGraph(int amountOfVertices);
     
@@ -52,11 +57,13 @@ public:
     
     void KruskalsAlgorithm(int firstVertex);
     
-    void DijkstrasAlgorithm();
+    void DijkstrasAlgorithm(int firstVertex);
     
     void Ford_FulkersonAlgorithm();
     
     void PrintMST();
+    
+    void PrintShortestPath();
 };
 
 

@@ -6,8 +6,9 @@
 #include "AdjacencyListForGraph.h"
 
 AdjacencyListForGraph::AdjacencyListForGraph(int amountOfVertices) : numberOfEdgesOfDirectedGraph(0),
-                                                                     numberOfEdgesOfUndirectedGraph(0),
-                                                                     MST_Prim(nullptr) {
+                                                                     numberOfEdgesOfUndirectedGraph(0), sptr(0),
+                                                                     MST_Prim(nullptr), d(nullptr), p(nullptr),
+                                                                     S(nullptr) {
     this->amountOfVertices = amountOfVertices;
     arrayOfAdjListDirectedGraph = new AdjacencyList<int>[amountOfVertices];
     arrayOfAdjListUndirectedGraph = new AdjacencyList<int>[amountOfVertices];
@@ -40,6 +41,15 @@ AdjacencyListForGraph::~AdjacencyListForGraph() {
     
     delete[] MST_Prim;
     MST_Prim = nullptr;
+    
+    delete[] d;
+    d = nullptr;
+    
+    delete[] p;
+    d = nullptr;
+    
+    delete[] S;
+    S = nullptr;
 }
 
 void AdjacencyListForGraph::AddEdgeForDirectedGraph(int vertex_to, int vertex_from, int vertex_weight) {
@@ -206,10 +216,74 @@ void AdjacencyListForGraph::KruskalsAlgorithm(int firstVertex) {
 
 void AdjacencyListForGraph::PrintMST() {
     for (auto i = 0; i < amountOfVertices - 1; i++) {
-        std::cout << "(" << MST_Prim[i].vertex_from << "," << MST_Prim[i].vertex_to << ")   " << MST_Prim[i].edge_weight
+        std::cout << "(" << MST_Prim[i].vertex_from << "," << MST_Prim[i].vertex_to << ")\t\t"
+                  << MST_Prim[i].edge_weight
                   << std::endl;
     }
-    std::cout << "Waga MST: " << weightOfMST << std::endl;
+    std::cout << "Waga MST:\t" << weightOfMST << std::endl;
+}
+
+void AdjacencyListForGraph::DijkstrasAlgorithm(int firstVertex) {
+    Heap heapForEdges;
+    
+    if (d != nullptr) {
+        delete[] d;
+        d = nullptr;
+        
+        delete[] p;
+        p = nullptr;
+        
+        delete[] S;
+        S = nullptr;
+    }
+    d = new int[amountOfVertices];
+    p = new int[amountOfVertices];
+    S = new int[amountOfVertices];
+    
+    for (auto v = 0; v < amountOfVertices; v++) {
+        d[v] = INT_MAX;
+        p[v] = INT_MIN;
+    }
+    
+    int vertex = firstVertex;
+    d[firstVertex] = 0;
+    
+    Edge edge;
+    
+    for (auto i = vertex; i < amountOfVertices; i++) {
+        auto pointer = arrayOfAdjListUndirectedGraph[i].head;
+        while (pointer != nullptr) {
+            edge.vertex_from = i;
+            edge.vertex_to = pointer->vertex;
+            edge.edge_weight = pointer->weight;
+            heapForEdges.AddEdge(edge, edge.edge_weight);
+            
+            pointer = pointer->next;
+        }
+    }
+    
+    while (heapForEdges.getAmountOfEdges()) {
+        edge = heapForEdges.GetEdgeFromTheBeginning();
+        heapForEdges.DeleteEdgeFromTheTop();
+        auto pointer = arrayOfAdjListUndirectedGraph[edge.vertex_from].head;
+        while (pointer != nullptr) {
+            if (d[pointer->vertex] > d[edge.vertex_from] + edge.edge_weight) {
+                d[pointer->vertex] = d[edge.vertex_from] + pointer->weight;
+                p[pointer->vertex] = edge.vertex_from;
+            }
+            pointer = pointer->next;
+        }
+    }
+}
+
+void AdjacencyListForGraph::PrintShortestPath() {
+    if (sptr != 0) sptr = 0;
+    for (auto i = 0; i < amountOfVertices; i++) {
+        std::cout << i << ": ";
+        for (auto j = i; j > -1; j = p[j]) S[sptr++] = j;
+        while (sptr) std::cout << S[--sptr] << " ";
+        std::cout << "$" << d[i] << std::endl;
+    }
 }
 
 

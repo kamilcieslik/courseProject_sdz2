@@ -156,10 +156,10 @@ void NeighborhoodMatrixForGraph::KruskalsAlgorithm(int firstVertex) {
 
 void NeighborhoodMatrixForGraph::PrintMST() {
     for (auto i = 0; i < amountOfVertices - 1; i++) {
-        std::cout << "(" << MST_Prim[i].vertex_from << "," << MST_Prim[i].vertex_to << ")   " << MST_Prim[i].edge_weight
+        std::cout << "(" << MST_Prim[i].vertex_from << "," << MST_Prim[i].vertex_to << ")\t\t" << MST_Prim[i].edge_weight
                   << std::endl;
     }
-    std::cout << "Waga MST: " << weightOfMST << std::endl;
+    std::cout << "Waga MST:\t" << weightOfMST << std::endl;
 }
 
 

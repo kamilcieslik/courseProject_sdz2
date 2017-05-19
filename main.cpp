@@ -29,7 +29,7 @@ void menu_mst() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                g.ReadGraphFromFile("GraphGeneratedByProgram.txt");
+                g.ReadGraphFromFile("graph2.txt");
                 
                 break;
             case 2: //Generowanie grafu pseudolosowo.
@@ -64,7 +64,7 @@ void menu_mst() //Obsługa tabeli.
                 break;
             
             case 9: //Test - pomiary czasowe.
-                
+                g.SaveToFile();
                 break;
             
             default:
@@ -85,7 +85,7 @@ void menu_the_shortest_path() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                g.ReadGraphFromFile("GraphGeneratedByProgram.txt");
+                g.ReadGraphFromFile("graph2.txt");
                 break;
             case 2: //Generowanie grafu pseudolosowo.
                 g.CreateGraphWithRandomIntegers();
@@ -94,6 +94,9 @@ void menu_the_shortest_path() //Obsługa tabeli.
                 //g2.PrintDirectedGraph();
                 break;
             case 4: //Algorytm 1. - Dijkstry (macierzowo i listowo).
+                g.adjacencyListForGraph->DijkstrasAlgorithm(1);
+                std::cout << "Shortest Path -> algorytm Dijkstry - listowo: " << std::endl;
+                g.adjacencyListForGraph->PrintShortestPath();
                 
                 break;
             

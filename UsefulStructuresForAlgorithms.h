@@ -30,6 +30,8 @@ public:
     
     void DeleteEdgeFromTheTop();
     
+    int getAmountOfEdges();
+    
 };
 
 class DisjointSetDataStructure {
