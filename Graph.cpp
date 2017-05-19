@@ -255,17 +255,6 @@ void Graph::CreateGraphWithRandomIntegers() {
     neighborhoodMatrixForGraph->PrintUndirectedGraph();
 }
 
-int Graph::GetParamOfEdge(int whichVertex, int whichParam, std::string directOrUndirect) {
-    if (directOrUndirect == "direct") {
-        return edgesOfDirectedGraph[whichVertex][whichParam];
-    } else {
-        return edgesOfUndirectedGraph[whichVertex][whichParam];
-    }
-}
-
-void Graph::PrimsAlgorithmForAdjacencyListGraph() {
-    //adjacencyListForGraph->PrimsAlgorithm(edgesOfUndirectedGraph, firstVertex, amountOfEdgesInUndirectedGraph);
-}
 
 
 

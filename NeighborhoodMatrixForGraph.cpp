@@ -92,7 +92,7 @@ void NeighborhoodMatrixForGraph::PrimsAlgorithm(int firstVertex) {
     for (auto i = 1; i < amountOfVertices; i++) {
         for (int j = 0; j < amountOfVertices; j++) {
             if (arrayOfMatrixUndirectedGraph[vertex][j] != 0 && arrayOfMatrixUndirectedGraph[vertex][j] < 11 &&
-                visited[j] == false) {
+                !visited[j]) {
                 edge.vertex_from = vertex;
                 edge.vertex_to = j;
                 edge.edge_weight = arrayOfMatrixUndirectedGraph[vertex][j];
