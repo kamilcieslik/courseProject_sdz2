@@ -2,13 +2,14 @@
 // Created by mrfarinq on 13.05.17.
 //
 
-#include <climits>
 #include "AdjacencyListForGraph.h"
 
 AdjacencyListForGraph::AdjacencyListForGraph(int amountOfVertices) : numberOfEdgesOfDirectedGraph(0),
-                                                                     numberOfEdgesOfUndirectedGraph(0), sptr(0),
-                                                                     MST_Prim(nullptr), d(nullptr), p(nullptr),
-                                                                     S(nullptr) {
+                                                                     numberOfEdgesOfUndirectedGraph(0),
+                                                                     MST_Prim(nullptr),
+                                                                     currentDistancesFromFirstVertex(nullptr),
+                                                                     previousVertices(nullptr),
+                                                                     shortestPaths(nullptr) {
     this->amountOfVertices = amountOfVertices;
     arrayOfAdjListDirectedGraph = new AdjacencyList<int>[amountOfVertices];
     arrayOfAdjListUndirectedGraph = new AdjacencyList<int>[amountOfVertices];
@@ -42,14 +43,14 @@ AdjacencyListForGraph::~AdjacencyListForGraph() {
     delete[] MST_Prim;
     MST_Prim = nullptr;
     
-    delete[] d;
-    d = nullptr;
+    delete[] currentDistancesFromFirstVertex;
+    currentDistancesFromFirstVertex = nullptr;
     
-    delete[] p;
-    d = nullptr;
+    delete[] previousVertices;
+    currentDistancesFromFirstVertex = nullptr;
     
-    delete[] S;
-    S = nullptr;
+    delete[] shortestPaths;
+    shortestPaths = nullptr;
 }
 
 void AdjacencyListForGraph::AddEdgeForDirectedGraph(int vertex_to, int vertex_from, int vertex_weight) {
@@ -224,67 +225,129 @@ void AdjacencyListForGraph::PrintMST() {
 }
 
 void AdjacencyListForGraph::DijkstrasAlgorithm(int firstVertex) {
-    Heap heapForEdges;
+    HeapForVertices heapForVertices;
     
-    if (d != nullptr) {
-        delete[] d;
-        d = nullptr;
+    if (currentDistancesFromFirstVertex != nullptr) {
+        delete[] currentDistancesFromFirstVertex;
+        currentDistancesFromFirstVertex = nullptr;
         
-        delete[] p;
-        p = nullptr;
+        delete[] previousVertices;
+        previousVertices = nullptr;
         
-        delete[] S;
-        S = nullptr;
+        delete[] shortestPaths;
+        shortestPaths = nullptr;
     }
-    d = new int[amountOfVertices];
-    p = new int[amountOfVertices];
-    S = new int[amountOfVertices];
+    currentDistancesFromFirstVertex = new int[amountOfVertices];
+    previousVertices = new int[amountOfVertices];
+    shortestPaths = new int[amountOfVertices];
     
+    Vertex vertex_st;
     for (auto v = 0; v < amountOfVertices; v++) {
-        d[v] = INT_MAX;
-        p[v] = INT_MIN;
+        currentDistancesFromFirstVertex[v] = INT_MAX;
+        previousVertices[v] = INT_MIN;
+        vertex_st.AddVertex(v, currentDistancesFromFirstVertex[v]);
+        heapForVertices.AddVertex(vertex_st, vertex_st.distanceFromFirstVertex);
     }
     
     int vertex = firstVertex;
-    d[firstVertex] = 0;
+    currentDistancesFromFirstVertex[vertex] = 0;
+    heapForVertices.changeDistanceFromFirstVertex(vertex, 0);
     
-    Edge edge;
-    
-    for (auto i = vertex; i < amountOfVertices; i++) {
-        auto pointer = arrayOfAdjListUndirectedGraph[i].head;
+    while (heapForVertices.getAmountOfVertices() != 0) {
+        vertex_st = heapForVertices.GetVertexFromTheBeginning();
+        heapForVertices.DeleteVertexFromTheTop();
+        auto pointer = arrayOfAdjListDirectedGraph[vertex_st.vertex].head;
         while (pointer != nullptr) {
-            edge.vertex_from = i;
-            edge.vertex_to = pointer->vertex;
-            edge.edge_weight = pointer->weight;
-            heapForEdges.AddEdge(edge, edge.edge_weight);
+            int v = pointer->vertex;
             
-            pointer = pointer->next;
-        }
-    }
-    
-    while (heapForEdges.getAmountOfEdges()) {
-        edge = heapForEdges.GetEdgeFromTheBeginning();
-        heapForEdges.DeleteEdgeFromTheTop();
-        auto pointer = arrayOfAdjListUndirectedGraph[edge.vertex_from].head;
-        while (pointer != nullptr) {
-            if (d[pointer->vertex] > d[edge.vertex_from] + edge.edge_weight) {
-                d[pointer->vertex] = d[edge.vertex_from] + pointer->weight;
-                p[pointer->vertex] = edge.vertex_from;
+            if (currentDistancesFromFirstVertex[vertex_st.vertex] != INT_MAX &&
+                pointer->weight + currentDistancesFromFirstVertex[vertex_st.vertex] <
+                currentDistancesFromFirstVertex[v]) {
+                currentDistancesFromFirstVertex[v] =
+                        currentDistancesFromFirstVertex[vertex_st.vertex] + pointer->weight;
+                heapForVertices.changeDistanceFromFirstVertex(v, currentDistancesFromFirstVertex[v]);
+                previousVertices[v] = vertex_st.vertex;
             }
             pointer = pointer->next;
         }
     }
 }
 
-void AdjacencyListForGraph::PrintShortestPath() {
-    if (sptr != 0) sptr = 0;
-    for (auto i = 0; i < amountOfVertices; i++) {
-        std::cout << i << ": ";
-        for (auto j = i; j > -1; j = p[j]) S[sptr++] = j;
-        while (sptr) std::cout << S[--sptr] << " ";
-        std::cout << "$" << d[i] << std::endl;
+void AdjacencyListForGraph::Bellman_FordAlgorithm(int firstVertex) {
+    if (currentDistancesFromFirstVertex != nullptr) {
+        delete[] currentDistancesFromFirstVertex;
+        currentDistancesFromFirstVertex = nullptr;
+        
+        delete[] previousVertices;
+        previousVertices = nullptr;
+        
+        delete[] shortestPaths;
+        shortestPaths = nullptr;
     }
+    currentDistancesFromFirstVertex = new int[amountOfVertices];
+    previousVertices = new int[amountOfVertices];
+    shortestPaths = new int[amountOfVertices];
+    
+    for (auto v = 0; v < amountOfVertices; v++) {
+        currentDistancesFromFirstVertex[v] = INT_MAX;
+        previousVertices[v] = INT_MIN;
+    }
+    
+    int vertex = firstVertex;
+    currentDistancesFromFirstVertex[vertex] = 0;
+    
+    bool test;
+    
+    for (auto i = 1; i < amountOfVertices; i++) {
+        test = true;
+        for (auto u = 0; u < amountOfVertices; u++)
+            for (auto pv = arrayOfAdjListDirectedGraph[u].head; pv; pv = pv->next)
+                if (currentDistancesFromFirstVertex[pv->vertex] > currentDistancesFromFirstVertex[u] + pv->weight) {
+                    test = false;
+                    currentDistancesFromFirstVertex[pv->vertex] = currentDistancesFromFirstVertex[u] + pv->weight;
+                    previousVertices[pv->vertex] = u;
+                }
+    }
+    
+    if (test == false) {
+        for (auto u = 0; u < amountOfVertices; u++)
+            for (auto pv = arrayOfAdjListDirectedGraph[u].head; pv; pv = pv->next)
+                if (currentDistancesFromFirstVertex[pv->vertex] > currentDistancesFromFirstVertex[u] + pv->weight) {
+                    throw std::underflow_error("Kopiec jest pusty.");
+                } // ujemny cykl!!
+        
+    }
+    
+    int numberOfPredecessors = 0;
+    for (auto i = 0; i < amountOfVertices; i++) {
+        
+        std::cout << i << ": ";
+         for (auto j = i; j > -1; j = previousVertices[j]) shortestPaths[numberOfPredecessors++] = j;
+         while (numberOfPredecessors) {
+             if (numberOfPredecessors == 1) {
+                 std::cout << shortestPaths[--numberOfPredecessors] << ".";
+             } else {
+                 std::cout << shortestPaths[--numberOfPredecessors] << " <- ";
+             }
+         }
+        std::cout << " Koszt: " << currentDistancesFromFirstVertex[i] << std::endl;
+    }
+    
 }
 
-
-
+void AdjacencyListForGraph::PrintShortestPath() {
+    int numberOfPredecessors = 0;
+    for (auto i = 0; i < amountOfVertices; i++) {
+        
+        std::cout << i << ": ";
+        for (auto j = i; j > -1; j = previousVertices[j]) shortestPaths[numberOfPredecessors++] = j;
+        while (numberOfPredecessors) {
+            if (numberOfPredecessors == 1) {
+                std::cout << shortestPaths[--numberOfPredecessors] << ".";
+            } else {
+                std::cout << shortestPaths[--numberOfPredecessors] << " <- ";
+            }
+        }
+        std::cout << " Koszt: " << currentDistancesFromFirstVertex[i] << std::endl;
+    }
+}

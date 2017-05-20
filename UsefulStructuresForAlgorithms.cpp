@@ -4,6 +4,12 @@
 
 #include "UsefulStructuresForAlgorithms.h"
 
+void Edge::AddEdge(int vertex_from, int vertex_to, int edge_weight) {
+    this->vertex_from = vertex_from;
+    this->vertex_to = vertex_to;
+    this->edge_weight = edge_weight;
+}
+
 Heap::Heap() {
     arrayOfEdges = new Edge[0];
     this->numberOfEdges = 0;
@@ -20,7 +26,6 @@ Edge Heap::GetEdgeFromTheBeginning() {
 }
 
 void Heap::AddEdge(Edge newEdge, int edge_weight) {
-    
     Edge *temporaryTable;
     temporaryTable = new Edge[numberOfEdges + 1];
     for (int i = 0; i < numberOfEdges; i++) {
@@ -83,12 +88,120 @@ int Heap::getAmountOfEdges() {
 }
 
 
-void Edge::AddEdge(int vertex_from, int vertex_to, int edge_weight) {
-    this->vertex_from = vertex_from;
-    this->vertex_to = vertex_to;
-    this->edge_weight = edge_weight;
+
+
+
+void Vertex::AddVertex(int vertex, int distanceFromFirstVertex){
+    this->vertex = vertex;
+    this->distanceFromFirstVertex = distanceFromFirstVertex;
 }
 
+HeapForVertices::HeapForVertices() {
+    arrayOfVertices = new Vertex[0];
+    this->numberOfVertices = 0;
+}
+
+HeapForVertices::~HeapForVertices() {
+    delete[] arrayOfVertices;
+    numberOfVertices = 0;
+    arrayOfVertices = nullptr;
+}
+
+Vertex HeapForVertices::GetVertexFromTheBeginning() {
+    return arrayOfVertices[0];
+}
+
+void HeapForVertices::AddVertex(Vertex newVertex, int vertex_distanceFromFirstVertex) {
+    Vertex *temporaryTable;
+    temporaryTable = new Vertex[numberOfVertices + 1];
+    for (int i = 0; i < numberOfVertices; i++) {
+        temporaryTable[i] = arrayOfVertices[i];
+    }
+    delete[] arrayOfVertices;
+    arrayOfVertices = temporaryTable;
+    
+    int i, j;
+    i = numberOfVertices++;
+    j = (i - 1) / 2;
+    
+    while (i && arrayOfVertices[j].distanceFromFirstVertex > vertex_distanceFromFirstVertex) {
+        arrayOfVertices[i] = arrayOfVertices[j];
+        i = j;
+        j = (i - 1) / 2;
+    }
+    
+    arrayOfVertices[i] = newVertex;
+}
+
+void HeapForVertices::DeleteVertexFromTheTop() {
+    if (numberOfVertices == 0) {
+        throw std::underflow_error("Kopiec jest pusty.");
+    }
+    
+    int i, j;
+    Vertex lastLeaf;
+    
+    if (numberOfVertices) {
+        lastLeaf = arrayOfVertices[--numberOfVertices];
+        
+        i = 0;
+        j = 1;
+        
+        while (j < numberOfVertices) {
+            if ((j + 1 < numberOfVertices) && (arrayOfVertices[j + 1].distanceFromFirstVertex < arrayOfVertices[j].distanceFromFirstVertex)) j++;
+            if (lastLeaf.distanceFromFirstVertex <= arrayOfVertices[j].distanceFromFirstVertex) {
+                break;
+            }
+            arrayOfVertices[i] = arrayOfVertices[j];
+            i = j;
+            j = 2 * j + 1;
+        }
+        
+        arrayOfVertices[i] = lastLeaf;
+        
+        Vertex *temporaryTable;
+        temporaryTable = new Vertex[numberOfVertices];
+        for (auto k = 0; k < numberOfVertices; k++) {
+            temporaryTable[k] = arrayOfVertices[k];
+        }
+        delete[] arrayOfVertices;
+        arrayOfVertices = temporaryTable;
+    }
+}
+
+int HeapForVertices::getAmountOfVertices() {
+    return numberOfVertices;
+}
+
+void HeapForVertices::changeDistanceFromFirstVertex(int vertex, int vertex_distanceFromFirstVertex) {
+    int index;
+    for (int i = 0; i < numberOfVertices; i++) {
+        if (arrayOfVertices[i].vertex == vertex) {
+            index=i;
+            arrayOfVertices[i].distanceFromFirstVertex=vertex_distanceFromFirstVertex;
+            break;
+        }
+    }
+    
+    int i = index;
+    int j = (i - 1) / 2;
+    while (i && arrayOfVertices[j].distanceFromFirstVertex > arrayOfVertices[i].distanceFromFirstVertex) {
+        Vertex tmpVertex = arrayOfVertices[i];
+        arrayOfVertices[i] = arrayOfVertices[j];
+        arrayOfVertices[j] = tmpVertex;
+        i = j;
+        j = (i - 1) / 2;
+    }
+}
+
+bool HeapForVertices::isIn(int vertex) {
+    for (int i = 0; i < numberOfVertices; i++) {
+        if (arrayOfVertices[i].vertex == vertex) {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 DisjointSetDataStructure::DisjointSetDataStructure(int numberOfNodes) {

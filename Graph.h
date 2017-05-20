@@ -39,6 +39,10 @@ public:
     void GenerateUndirectedGraph();
     
     void SaveToFile();
+    
+    int getFirstVertex();
+    
+    int getLastVertex();
 };
 
 

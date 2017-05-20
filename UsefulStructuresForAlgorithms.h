@@ -6,6 +6,7 @@
 #define SDIZO_2_USEFULSTRUCTURESFORALGORITHMS_H
 
 #include <iostream>
+#include <climits>
 
 struct Edge {
     int vertex_from = 0;
@@ -31,6 +32,36 @@ public:
     void DeleteEdgeFromTheTop();
     
     int getAmountOfEdges();
+    
+};
+
+struct Vertex {
+    int vertex = 0;
+    int distanceFromFirstVertex=0;
+    
+    void AddVertex(int vertex, int distanceFromFirstVertex);
+};
+
+class HeapForVertices {
+private:
+    int numberOfVertices;
+    Vertex *arrayOfVertices;
+public:
+    HeapForVertices();
+    
+    ~HeapForVertices();
+    
+    Vertex GetVertexFromTheBeginning();
+    
+    void AddVertex(Vertex newVertex, int vertex_distanceFromFirstVertex);
+    
+    void DeleteVertexFromTheTop();
+    
+    int getAmountOfVertices();
+    
+    void changeDistanceFromFirstVertex(int vertex, int vertex_distanceFromFirstVertex);
+    
+    bool isIn(int vertex);
     
 };
 

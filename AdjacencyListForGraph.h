@@ -6,6 +6,7 @@
 #define SDIZO_2_ADJACENCYLISTFORGRAPH_H
 
 #include <iostream>
+#include <climits>
 #include "UsefulStructuresForAlgorithms.h"
 
 
@@ -33,10 +34,9 @@ private:
     Edge *MST_Prim;
     int weightOfMST;
     
-    int *d;
-    int *p;
-    int *S;
-    int sptr;
+    int *shortestPaths;
+    int *currentDistancesFromFirstVertex;
+    int *previousVertices;
     
 public:
     explicit AdjacencyListForGraph(int amountOfVertices);
@@ -59,7 +59,7 @@ public:
     
     void DijkstrasAlgorithm(int firstVertex);
     
-    void Ford_FulkersonAlgorithm();
+    void Bellman_FordAlgorithm(int firstVertex);
     
     void PrintMST();
     

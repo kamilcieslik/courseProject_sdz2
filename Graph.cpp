@@ -258,6 +258,14 @@ void Graph::CreateGraphWithRandomIntegers() {
     neighborhoodMatrixForGraph->PrintUndirectedGraph();
 }
 
+int Graph::getFirstVertex() {
+    return firstVertex;
+}
+
+int Graph::getLastVertex() {
+    return lastVertex;
+}
+
 
 
 

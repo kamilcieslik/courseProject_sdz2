@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Graph.h"
 
+#pragma comment(linker, "/STACK:100000000")
+
 void displayMenu(const std::string &info, const std::string &alghoritm_1,
                  const std::string &alghoritm_2) //Menu dla tabeli i listy.
 {
@@ -29,7 +31,9 @@ void menu_mst() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                g.ReadGraphFromFile("graph2.txt");
+                std::cout << "Podaj sciezke pliku z danymi: ";
+                std::cin >> path;
+                g.ReadGraphFromFile(path);
                 
                 break;
             case 2: //Generowanie grafu pseudolosowo.
@@ -85,7 +89,9 @@ void menu_the_shortest_path() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                g.ReadGraphFromFile("graph2.txt");
+                std::cout << "Podaj sciezke pliku z danymi: ";
+                std::cin >> path;
+                g.ReadGraphFromFile(path);
                 break;
             case 2: //Generowanie grafu pseudolosowo.
                 g.CreateGraphWithRandomIntegers();
@@ -94,18 +100,23 @@ void menu_the_shortest_path() //Obsługa tabeli.
                 //g2.PrintDirectedGraph();
                 break;
             case 4: //Algorytm 1. - Dijkstry (macierzowo i listowo).
-                g.adjacencyListForGraph->DijkstrasAlgorithm(1);
+                g.adjacencyListForGraph->DijkstrasAlgorithm(g.getFirstVertex());
                 std::cout << "Shortest Path -> algorytm Dijkstry - listowo: " << std::endl;
                 g.adjacencyListForGraph->PrintShortestPath();
+                g.neighborhoodMatrixForGraph->DijkstrasAlgorithm(g.getFirstVertex());
+                std::cout << "Shortest Path -> algorytm Dijkstry - macierzowo: " << std::endl;
+                g.neighborhoodMatrixForGraph->PrintShortestPath();
                 
                 break;
             
-            case 5: //Algorytm 2. - Forda-Bellmana (macierzowo i listowo).
-                
+            case 5: //Algorytm 2. - Bellmana-Forda (macierzowo i listowo).
+                g.adjacencyListForGraph->Bellman_FordAlgorithm(g.getFirstVertex());
+                std::cout << "Shortest Path -> algorytm Bellmana_Forda - listowo: " << std::endl;
+                //g.adjacencyListForGraph->PrintShortestPath();
                 break;
             
             case 9: //Test - pomiary czasowe.
-                
+                g.SaveToFile();
                 break;
             
             default:

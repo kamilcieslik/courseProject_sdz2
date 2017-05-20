@@ -6,6 +6,7 @@
 #define SDIZO_2_NEIGHBORHOODMATRIXFORGRAPH_H
 
 #include <iostream>
+#include <climits>
 #include "UsefulStructuresForAlgorithms.h"
 
 class NeighborhoodMatrixForGraph {
@@ -18,6 +19,10 @@ private:
     
     Edge *MST_Prim;
     int weightOfMST;
+    
+    int *shortestPaths;
+    int *currentDistancesFromFirstVertex;
+    int *previousVertices;
     
 public:
     explicit NeighborhoodMatrixForGraph(int amountOfVertices);
@@ -37,12 +42,13 @@ public:
     
     void PrimsAlgorithm(int firstVertex);
     
-    void DijkstrasAlgorithm();
+    void DijkstrasAlgorithm(int firstVertex);
     
-    void Ford_FulkersonAlgorithm();
+    void Bellman_FordAlgorithm(int firstVertex);
     
     void PrintMST();
     
+    void PrintShortestPath();
 };
 
 
