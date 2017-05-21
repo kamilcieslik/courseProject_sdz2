@@ -66,19 +66,18 @@ int NeighborhoodMatrixForGraph::GetWeightOfEdge(int vertex_from, int vertex_to) 
 }
 
 void NeighborhoodMatrixForGraph::PrintDirectedGraph() {
-    std::cout<<"W/K\t";
-    for (int i = 0; i<amountOfVertices; i++)
-    {
-        std::cout << i<<".\t";
+    std::cout << "W/K\t";
+    for (int i = 0; i < amountOfVertices; i++) {
+        std::cout << i << ".\t";
     }
-    std::cout <<"\v"<< std::endl;
+    std::cout << "\v" << std::endl;
     for (int i = 0; i < amountOfVertices; i++) {
         for (int j = 0; j < amountOfVertices; j++) {
             if (j == 0) {
                 if (arrayOfMatrixDirectedGraph[i][j] < 0) {
-                    std::cout << i<<".\t\b" << arrayOfMatrixDirectedGraph[i][j];
+                    std::cout << i << ".\t\b" << arrayOfMatrixDirectedGraph[i][j];
                 } else {
-                    std::cout << i<<".\t" << arrayOfMatrixDirectedGraph[i][j];
+                    std::cout << i << ".\t" << arrayOfMatrixDirectedGraph[i][j];
                 }
             } else {
                 if (arrayOfMatrixDirectedGraph[i][j] < 0) {
@@ -88,24 +87,23 @@ void NeighborhoodMatrixForGraph::PrintDirectedGraph() {
                 }
             }
         }
-        std::cout <<"\v"<< std::endl;
+        std::cout << "\v" << std::endl;
     }
 }
 
 void NeighborhoodMatrixForGraph::PrintUndirectedGraph() {
-    std::cout<<"W/K\t";
-    for (int i = 0; i<amountOfVertices; i++)
-    {
-        std::cout << i<<".\t";
+    std::cout << "W/K\t";
+    for (int i = 0; i < amountOfVertices; i++) {
+        std::cout << i << ".\t";
     }
-    std::cout <<"\v"<< std::endl;
+    std::cout << "\v" << std::endl;
     for (int i = 0; i < amountOfVertices; i++) {
         for (int j = 0; j < amountOfVertices; j++) {
             if (j == 0) {
                 if (arrayOfMatrixUndirectedGraph[i][j] < 0) {
-                    std::cout << i<<".\t\b" << arrayOfMatrixUndirectedGraph[i][j];
+                    std::cout << i << ".\t\b" << arrayOfMatrixUndirectedGraph[i][j];
                 } else {
-                    std::cout << i<<".\t" << arrayOfMatrixUndirectedGraph[i][j];
+                    std::cout << i << ".\t" << arrayOfMatrixUndirectedGraph[i][j];
                 }
             } else {
                 if (arrayOfMatrixUndirectedGraph[i][j] < 0) {
@@ -115,7 +113,7 @@ void NeighborhoodMatrixForGraph::PrintUndirectedGraph() {
                 }
             }
         }
-        std::cout <<"\v"<< std::endl;
+        std::cout << "\v" << std::endl;
     }
 }
 
@@ -243,16 +241,16 @@ void NeighborhoodMatrixForGraph::DijkstrasAlgorithm(int firstVertex) {
     while (heapForVertices.getAmountOfVertices() != 0) {
         vertex_st = heapForVertices.GetVertexFromTheBeginning();
         heapForVertices.DeleteVertexFromTheTop();
-        for (int j = 0; j < amountOfVertices; j++)
-        {
-            if(arrayOfMatrixDirectedGraph[vertex_st.vertex][j]!=0)
-            {
+        for (int j = 0; j < amountOfVertices; j++) {
+            if (arrayOfMatrixDirectedGraph[vertex_st.vertex][j] != 0) {
                 int v = j;
                 if (currentDistancesFromFirstVertex[vertex_st.vertex] != INT_MAX &&
-                    arrayOfMatrixDirectedGraph[vertex_st.vertex][j] + currentDistancesFromFirstVertex[vertex_st.vertex] <
+                    arrayOfMatrixDirectedGraph[vertex_st.vertex][j] +
+                    currentDistancesFromFirstVertex[vertex_st.vertex] <
                     currentDistancesFromFirstVertex[v]) {
                     currentDistancesFromFirstVertex[v] =
-                            currentDistancesFromFirstVertex[vertex_st.vertex] + arrayOfMatrixDirectedGraph[vertex_st.vertex][j];
+                            currentDistancesFromFirstVertex[vertex_st.vertex] +
+                            arrayOfMatrixDirectedGraph[vertex_st.vertex][j];
                     heapForVertices.changeDistanceFromFirstVertex(v, currentDistancesFromFirstVertex[v]);
                     previousVertices[v] = vertex_st.vertex;
                 }
@@ -263,22 +261,75 @@ void NeighborhoodMatrixForGraph::DijkstrasAlgorithm(int firstVertex) {
 };
 
 void NeighborhoodMatrixForGraph::Bellman_FordAlgorithm(int firstVertex) {
-
+    if (currentDistancesFromFirstVertex != nullptr) {
+        delete[] currentDistancesFromFirstVertex;
+        currentDistancesFromFirstVertex = nullptr;
+        
+        delete[] previousVertices;
+        previousVertices = nullptr;
+        
+        delete[] shortestPaths;
+        shortestPaths = nullptr;
+    }
+    currentDistancesFromFirstVertex = new int[amountOfVertices];
+    previousVertices = new int[amountOfVertices];
+    shortestPaths = new int[amountOfVertices];
+    
+    for (auto v = 0; v < amountOfVertices; v++) {
+        currentDistancesFromFirstVertex[v] = INT_MAX - 1000;
+        previousVertices[v] = INT_MIN;
+    }
+    
+    int vertex = firstVertex;
+    currentDistancesFromFirstVertex[vertex] = 0;
+    
+    bool withoutChange;
+    bool exitBF = false;
+    for (auto i = 1; i < amountOfVertices; i++) {
+        if (exitBF) break;
+        withoutChange = true;
+        for (auto j = 0; j < amountOfVertices; j++) {
+            for (auto k = 0; k < amountOfVertices; k++) {
+                if (arrayOfMatrixDirectedGraph[j][k] != 0) {
+                    if (currentDistancesFromFirstVertex[k] >
+                        currentDistancesFromFirstVertex[j] + arrayOfMatrixDirectedGraph[j][k]) {
+                        withoutChange = false;
+                        currentDistancesFromFirstVertex[k] =
+                                currentDistancesFromFirstVertex[j] + arrayOfMatrixDirectedGraph[j][k];
+                        previousVertices[k] = j;
+                    }
+                }
+            }
+        }
+        if (withoutChange) exitBF = true;
+    }
+    
+    if (exitBF == false) {
+        for (auto j = 0; j < amountOfVertices; j++)
+        {
+            for (auto k = 0; k < amountOfVertices; k++)
+            {
+                if (arrayOfMatrixDirectedGraph[j][k] != 0) {
+                    if (currentDistancesFromFirstVertex[k] >
+                        currentDistancesFromFirstVertex[j] + arrayOfMatrixDirectedGraph[j][k]) {
+                        throw std::underflow_error("Cykl ujemny.");
+                    }
+                }
+            }
+        }
+    }
 }
 
 void NeighborhoodMatrixForGraph::PrintShortestPath() {
-    int numberOfPredecessors=0;
+    int numberOfPredecessors = 0;
     for (auto i = 0; i < amountOfVertices; i++) {
         
         std::cout << i << ": ";
         for (auto j = i; j > -1; j = previousVertices[j]) shortestPaths[numberOfPredecessors++] = j;
         while (numberOfPredecessors) {
-            if (numberOfPredecessors==1)
-            {
+            if (numberOfPredecessors == 1) {
                 std::cout << shortestPaths[--numberOfPredecessors] << ".";
-            }
-            else
-            {
+            } else {
                 std::cout << shortestPaths[--numberOfPredecessors] << " <- ";
             }
         }

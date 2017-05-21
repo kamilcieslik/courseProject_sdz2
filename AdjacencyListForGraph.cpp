@@ -3,6 +3,7 @@
 //
 
 #include "AdjacencyListForGraph.h"
+#include <climits>
 
 AdjacencyListForGraph::AdjacencyListForGraph(int amountOfVertices) : numberOfEdgesOfDirectedGraph(0),
                                                                      numberOfEdgesOfUndirectedGraph(0),
@@ -289,50 +290,45 @@ void AdjacencyListForGraph::Bellman_FordAlgorithm(int firstVertex) {
     shortestPaths = new int[amountOfVertices];
     
     for (auto v = 0; v < amountOfVertices; v++) {
-        currentDistancesFromFirstVertex[v] = INT_MAX;
+        currentDistancesFromFirstVertex[v] = INT_MAX - 1000;
         previousVertices[v] = INT_MIN;
     }
     
     int vertex = firstVertex;
     currentDistancesFromFirstVertex[vertex] = 0;
     
-    bool test;
-    
+    bool withoutChange;
+    bool exitBF = false;
     for (auto i = 1; i < amountOfVertices; i++) {
-        test = true;
-        for (auto u = 0; u < amountOfVertices; u++)
-            for (auto pv = arrayOfAdjListDirectedGraph[u].head; pv; pv = pv->next)
-                if (currentDistancesFromFirstVertex[pv->vertex] > currentDistancesFromFirstVertex[u] + pv->weight) {
-                    test = false;
-                    currentDistancesFromFirstVertex[pv->vertex] = currentDistancesFromFirstVertex[u] + pv->weight;
-                    previousVertices[pv->vertex] = u;
+        if (exitBF) break;
+        withoutChange = true;
+        for (auto j = 0; j < amountOfVertices; j++) {
+            auto pointer = arrayOfAdjListDirectedGraph[j].head;
+            while (pointer != nullptr) {
+                if (currentDistancesFromFirstVertex[pointer->vertex] >
+                    currentDistancesFromFirstVertex[j] + pointer->weight) {
+                    withoutChange = false;
+                    currentDistancesFromFirstVertex[pointer->vertex] =
+                            currentDistancesFromFirstVertex[j] + pointer->weight;
+                    previousVertices[pointer->vertex] = j;
                 }
+                pointer = pointer->next;
+            }
+        }
+        if (withoutChange) exitBF = true;
     }
-    
-    if (test == false) {
-        for (auto u = 0; u < amountOfVertices; u++)
-            for (auto pv = arrayOfAdjListDirectedGraph[u].head; pv; pv = pv->next)
-                if (currentDistancesFromFirstVertex[pv->vertex] > currentDistancesFromFirstVertex[u] + pv->weight) {
-                    throw std::underflow_error("Kopiec jest pusty.");
-                } // ujemny cykl!!
-        
+    if (exitBF == false) {
+        for (auto j = 0; j < amountOfVertices; j++) {
+            auto pointer = arrayOfAdjListDirectedGraph[j].head;
+            while (pointer != nullptr) {
+                if (currentDistancesFromFirstVertex[pointer->vertex] >
+                    currentDistancesFromFirstVertex[j] + pointer->weight) {
+                    throw std::underflow_error("Cykl ujemny.");
+                }
+                pointer = pointer->next;
+            }
+        }
     }
-    
-    int numberOfPredecessors = 0;
-    for (auto i = 0; i < amountOfVertices; i++) {
-        
-        std::cout << i << ": ";
-         for (auto j = i; j > -1; j = previousVertices[j]) shortestPaths[numberOfPredecessors++] = j;
-         while (numberOfPredecessors) {
-             if (numberOfPredecessors == 1) {
-                 std::cout << shortestPaths[--numberOfPredecessors] << ".";
-             } else {
-                 std::cout << shortestPaths[--numberOfPredecessors] << " <- ";
-             }
-         }
-        std::cout << " Koszt: " << currentDistancesFromFirstVertex[i] << std::endl;
-    }
-    
 }
 
 void AdjacencyListForGraph::PrintShortestPath() {
