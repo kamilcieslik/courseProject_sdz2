@@ -43,6 +43,16 @@ public:
     int getFirstVertex();
     
     int getLastVertex();
+    
+    void PrintGraphs();
+    
+    void PrintAllPrimsAlgorithms();
+    
+    void PrintAllKruskalsAlgorithms();
+    
+    void PrintAllDijkstrasAlgorithms();
+    
+    void PrintAllBellmanFordsAlgorithms();
 };
 
 

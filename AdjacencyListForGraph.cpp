@@ -3,7 +3,6 @@
 //
 
 #include "AdjacencyListForGraph.h"
-#include <climits>
 
 AdjacencyListForGraph::AdjacencyListForGraph(int amountOfVertices) : numberOfEdgesOfDirectedGraph(0),
                                                                      numberOfEdgesOfUndirectedGraph(0),
@@ -83,7 +82,7 @@ void AdjacencyListForGraph::AddEdgeForUndirectedGraph(int vertex_from, int verte
     arrayOfAdjListUndirectedGraph[vertex_from].head = newNode;
 }
 
-int AdjacencyListForGraph::GetVerticeDegree(int vertex) {
+int AdjacencyListForGraph::GetVertexDegree(int vertex) {
     int degree = 0;
     if (numberOfEdgesOfDirectedGraph == 0) return degree;
     else {
@@ -104,9 +103,6 @@ int AdjacencyListForGraph::GetVerticeDegree(int vertex) {
 }
 
 void AdjacencyListForGraph::PrintDirectedGraph() {
-    if (arrayOfAdjListDirectedGraph == nullptr) {
-        throw std::logic_error("Graf nie został zainicjalizowany.");
-    }
     for (auto i = 0; i < amountOfVertices; ++i) {
         auto pointerToNodesOfAdjacencyList = arrayOfAdjListDirectedGraph[i].head;
         std::cout << "Adj[" << i << "]: ";
@@ -121,9 +117,6 @@ void AdjacencyListForGraph::PrintDirectedGraph() {
 }
 
 void AdjacencyListForGraph::PrintUndirectedGraph() {
-    if (arrayOfAdjListUndirectedGraph == nullptr) {
-        throw std::logic_error("Graf nie został zainicjalizowany.");
-    }
     for (auto i = 0; i < amountOfVertices; ++i) {
         auto pointerToNodesOfAdjacencyList = arrayOfAdjListUndirectedGraph[i].head;
         std::cout << "Adj[" << i << "]: ";
@@ -137,7 +130,7 @@ void AdjacencyListForGraph::PrintUndirectedGraph() {
     }
 }
 
-void AdjacencyListForGraph::PrimsAlgorithm(int firstVertex) {
+void AdjacencyListForGraph::PrimsAlgorithm() {
     Heap heapForEdges;
     bool *visited = new bool[amountOfVertices];
     
@@ -145,7 +138,7 @@ void AdjacencyListForGraph::PrimsAlgorithm(int firstVertex) {
         visited[i] = false;
     }
     
-    int vertex = firstVertex;
+    int vertex = 0;
     visited[vertex] = true;
     
     weightOfMST = 0;
@@ -181,7 +174,7 @@ void AdjacencyListForGraph::PrimsAlgorithm(int firstVertex) {
     delete[] visited;
 }
 
-void AdjacencyListForGraph::KruskalsAlgorithm(int firstVertex) {
+void AdjacencyListForGraph::KruskalsAlgorithm() {
     Heap heapForEdges;
     DisjointSetDataStructure disjointSetForVertex(amountOfVertices);
     
@@ -189,7 +182,7 @@ void AdjacencyListForGraph::KruskalsAlgorithm(int firstVertex) {
         disjointSetForVertex.Init(i);
     }
     
-    int vertex = firstVertex;
+    int vertex = 0;
     Edge edge;
     
     for (auto i = vertex; i < amountOfVertices; i++) {
@@ -223,9 +216,6 @@ void AdjacencyListForGraph::KruskalsAlgorithm(int firstVertex) {
 }
 
 void AdjacencyListForGraph::PrintMST() {
-    if (MST_Prim == nullptr) {
-        throw std::logic_error("Graf nie został zainicjalizowany.");
-    }
     for (auto i = 0; i < amountOfVertices - 1; i++) {
         std::cout << "(" << MST_Prim[i].vertex_from << "," << MST_Prim[i].vertex_to << ")\t\t"
                   << MST_Prim[i].edge_weight
@@ -341,9 +331,6 @@ void AdjacencyListForGraph::Bellman_FordAlgorithm(int firstVertex) {
 }
 
 void AdjacencyListForGraph::PrintShortestPath() {
-    if (currentDistancesFromFirstVertex == nullptr) {
-        throw std::logic_error("Graf nie został zainicjalizowany.");
-    }
     int numberOfPredecessors = 0;
     for (auto i = 0; i < amountOfVertices; i++) {
         

@@ -38,9 +38,9 @@ public:
     
     void PrintUndirectedGraph();
     
-    void KruskalsAlgorithm(int firstVertex);
+    void KruskalsAlgorithm();
     
-    void PrimsAlgorithm(int firstVertex);
+    void PrimsAlgorithm();
     
     void DijkstrasAlgorithm(int firstVertex);
     

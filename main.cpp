@@ -13,6 +13,7 @@ void displayMenu(const std::string &info, const std::string &alghoritm_1,
     std::cout << "3. Wyświetl (macierzowo i listowo)." << std::endl;
     std::cout << "4. Algorytm - " << alghoritm_1 << " (macierzowo i listowo)." << std::endl;
     std::cout << "5. Algorytm - " << alghoritm_2 << " (macierzowo i listowo)." << std::endl;
+    std::cout << "8. Zapisz graf do pliku." << std::endl;
     std::cout << "9. Test (pomiary)." << std::endl;
     std::cout << "0. Powrot do menu." << std::endl;
     std::cout << "Podaj opcje:";
@@ -20,9 +21,7 @@ void displayMenu(const std::string &info, const std::string &alghoritm_1,
 
 void menu_mst() //Obsługa tabeli.
 {
-    
     Graph g;
-    
     std::string path;
     int option;
     do {
@@ -33,40 +32,63 @@ void menu_mst() //Obsługa tabeli.
             case 1: //Tworzenie grafu z pliku txt.
                 std::cout << "Podaj sciezke pliku z danymi: ";
                 std::cin >> path;
-                g.ReadGraphFromFile(path);
+                try {
+                    g.ReadGraphFromFile(path);
+                } catch (std::logic_error &e)
+                {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
-                
+            
             case 2: //Generowanie grafu pseudolosowo.
-                g.CreateGraphWithRandomIntegers();
+                try {
+                    g.CreateGraphWithRandomIntegers();
+                }
+                catch (std::invalid_argument &e)
+                {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
-                
+            
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                // g.PrintDirectedGraph();
-                g.SaveToFile();
+                try {
+                    g.PrintGraphs();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
-                
+            
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
-                g.adjacencyListForGraph->PrimsAlgorithm(0);
-                std::cout << "MST -> algorytm Prima - listowo: " << std::endl;
-                g.adjacencyListForGraph->PrintMST();
-                g.neighborhoodMatrixForGraph->PrimsAlgorithm(0);
-                std::cout << std::endl;
-                std::cout << "MST -> algorytm Prima - macierzowo: " << std::endl;
-                g.neighborhoodMatrixForGraph->PrintMST();
+                try {
+                    g.PrintAllPrimsAlgorithms();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
             
             case 5: //Algorytm 2. - Kruskala (macierzowo i listowo).
-                g.adjacencyListForGraph->KruskalsAlgorithm(0);
-                std::cout << "MST -> algorytm Kruskala - listowo: " << std::endl;
-                g.adjacencyListForGraph->PrintMST();
-                g.neighborhoodMatrixForGraph->KruskalsAlgorithm(0);
-                std::cout << std::endl;
-                std::cout << "MST -> algorytm Kruskala - macierzowo: " << std::endl;
-                g.neighborhoodMatrixForGraph->PrintMST();
+                try {
+                    g.PrintAllKruskalsAlgorithms();
+                }
+                catch (std::logic_error &e) { //Cykl ujemny.
+                    std::cout << e.what() << std::endl;
+                }
                 break;
             
+            case 8: //Zapis grafu do pliku.
+                try {
+                    g.SaveToFile();
+                }
+                catch (std::logic_error &e)
+                {
+                    std::cout << e.what() << std::endl;
+                }
+                break;
+                
             case 9: //Test - pomiary czasowe.
-                g.SaveToFile();
+               
                 break;
             
             default:
@@ -91,37 +113,61 @@ void menu_the_shortest_path() //Obsługa tabeli.
                 std::cin >> path;
                 g.ReadGraphFromFile(path);
                 break;
-                
+            
             case 2: //Generowanie grafu pseudolosowo.
-                g.CreateGraphWithRandomIntegers();
+                try {
+                    g.CreateGraphWithRandomIntegers();
+                }
+                catch (std::invalid_argument &e)
+                {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
-                
+            
             case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                //g2.PrintDirectedGraph();
+                try {
+                    g.PrintGraphs();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
             
             case 4: //Algorytm 1. - Dijkstry (macierzowo i listowo).
-                g.adjacencyListForGraph->DijkstrasAlgorithm(g.getFirstVertex());
-                std::cout << "Shortest Path -> algorytm Dijkstry - listowo: " << std::endl;
-                g.adjacencyListForGraph->PrintShortestPath();
-                g.neighborhoodMatrixForGraph->DijkstrasAlgorithm(g.getFirstVertex());
-                std::cout << "Shortest Path -> algorytm Dijkstry - macierzowo: " << std::endl;
-                g.neighborhoodMatrixForGraph->PrintShortestPath();
+                try {
+                    g.PrintAllDijkstrasAlgorithms();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
             
             case 5: //Algorytm 2. - Bellmana-Forda (macierzowo i listowo).
-                g.adjacencyListForGraph->Bellman_FordAlgorithm(g.getFirstVertex());
-                std::cout << "Shortest Path -> algorytm Bellmana_Forda - listowo: " << std::endl;
-                g.adjacencyListForGraph->PrintShortestPath();
-                g.neighborhoodMatrixForGraph->Bellman_FordAlgorithm(g.getFirstVertex());
-                std::cout << "Shortest Path -> algorytm Bellmana_Forda - macierzowo: " << std::endl;
-                g.neighborhoodMatrixForGraph->PrintShortestPath();
+                try {
+                    g.PrintAllBellmanFordsAlgorithms();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
+                catch (std::underflow_error &e_2){ //Cykl ujemny.
+                    std::cout << e_2.what() << std::endl;
+                }
                 break;
-            
+    
+            case 8: //Zapis grafu do pliku.
+                try {
+                    g.SaveToFile();
+                }
+                catch (std::logic_error &e)
+                {
+                    std::cout << e.what() << std::endl;
+                }
+                break;
+    
             case 9: //Test - pomiary czasowe.
-                g.SaveToFile();
+        
                 break;
-            
+    
             default:
                 break;
         }

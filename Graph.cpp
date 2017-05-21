@@ -14,11 +14,11 @@ Graph::Graph() : maximumWeightOfEdge(9), amountOfEdgesInAdjacencyListOfDirectedG
 }
 
 void Graph::DeleteGraph() {
-    if (amountOfEdgesInDirectedGraph!=0)
+    if (amountOfEdgesInDirectedGraph != 0)
         for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
             delete[] edgesOfDirectedGraph[i];
         }
-    if (amountOfEdgesInUndirectedGraph!=0)
+    if (amountOfEdgesInUndirectedGraph != 0)
         for (int i = 0; i < amountOfEdgesInUndirectedGraph; i++) {
             delete[] edgesOfUndirectedGraph[i];
         }
@@ -52,49 +52,49 @@ void Graph::ReadGraphFromFile(std::string path) {
         file >> amountOfVertices;
         file >> firstVertex;
         file >> lastVertex;
-        if (file.fail()) throw std::error_condition();
+        if (file.fail()) throw std::logic_error("Błąd odczytu danych w pliku.");
+        else {
+    
+            edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
+            adjacencyListForGraph = new AdjacencyListForGraph(amountOfVertices);
+            neighborhoodMatrixForGraph = new NeighborhoodMatrixForGraph(amountOfVertices);
+    
+            int vertex_from, vertex_to, edge_weight;
+            for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
+                file >> vertex_from;
+                file >> vertex_to;
+                file >> edge_weight;
         
-        edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
-        adjacencyListForGraph = new AdjacencyListForGraph(amountOfVertices);
-        neighborhoodMatrixForGraph = new NeighborhoodMatrixForGraph(amountOfVertices);
-        
-        int vertex_from, vertex_to, edge_weight;
-        for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
-            file >> vertex_from;
-            file >> vertex_to;
-            file >> edge_weight;
-            
-            if (file.fail()) throw std::error_condition();
-            
-            edgesOfDirectedGraph[i] = new int[3];
-            edgesOfDirectedGraph[i][0] = vertex_from;
-            edgesOfDirectedGraph[i][1] = vertex_to;
-            edgesOfDirectedGraph[i][2] = edge_weight;
-            
-            adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
-            neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                if (file.fail()) throw std::logic_error("Błąd odczytu danych w pliku.");
+                else {
+    
+                    edgesOfDirectedGraph[i] = new int[3];
+                    edgesOfDirectedGraph[i][0] = vertex_from;
+                    edgesOfDirectedGraph[i][1] = vertex_to;
+                    edgesOfDirectedGraph[i][2] = edge_weight;
+    
+                    adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                    neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                }
+            }
+    
+            file.close();
+    
+            GenerateUndirectedGraph();
+    
+            PrintGraphs();
         }
-        
-        file.close();
-        
-        GenerateUndirectedGraph();
-        
-        std::cout << "Reprezentacja listowa grafu skierowanego:\n\n";
-        adjacencyListForGraph->PrintDirectedGraph();
-        std::cout << std::endl;
-        std::cout << "Reprezentacja macierzowa grafu skierowanego:\n\n";
-        neighborhoodMatrixForGraph->PrintDirectedGraph();
-        std::cout << std::endl;
-        std::cout << "Reprezentacja listowa grafu nieskierowanego:\n\n";
-        adjacencyListForGraph->PrintUndirectedGraph();
-        std::cout << std::endl;
-        std::cout << "Reprezentacja macierzowa grafu nieskierowanego:\n\n";
-        neighborhoodMatrixForGraph->PrintUndirectedGraph();
+    }
+    else
+    {
+        throw std::logic_error("Błąd otwarcia pliku.");
     }
 }
 
 void Graph::SaveToFile() {
-    std::fstream file("GraphGeneratedByProgram2.txt", std::ios::out);
+    if (adjacencyListForGraph == nullptr || neighborhoodMatrixForGraph == nullptr)
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    std::fstream file("GraphGeneratedByProgram.txt", std::ios::out);
     if (file.good()) {
         file << amountOfEdgesInDirectedGraph << " " << amountOfVertices << " " << firstVertex << " "
              << lastVertex << "\n";
@@ -201,8 +201,8 @@ void Graph::CreateGraphWithRandomIntegers() {
     {
         do {
             vertex_to = randomVertice(randomEngine);
-        } while (adjacencyListForGraph->GetVerticeDegree(vertex_to) > 0 || vertex_to ==
-                                                                           vertex_from);  //LOSUJ WIERZCHOLEK DOCELOWY DOPOKI NIE WYLOSUJESZ NIEPOLOCZONEGO ZADNA KRAWEDZIA WIERZCHOLKA ALBO NIE WYLOSUJESZ 2 ROZNYCH WIERCHOLKOW
+        } while (adjacencyListForGraph->GetVertexDegree(vertex_to) > 0 || vertex_to ==
+                                                                          vertex_from);  //LOSUJ WIERZCHOLEK DOCELOWY DOPOKI NIE WYLOSUJESZ NIEPOLOCZONEGO ZADNA KRAWEDZIA WIERZCHOLKA ALBO NIE WYLOSUJESZ 2 ROZNYCH WIERCHOLKOW
         edge_weight = edgeWeight(randomEngine);
         
         edgesOfDirectedGraph[i] = new int[3];
@@ -245,6 +245,21 @@ void Graph::CreateGraphWithRandomIntegers() {
     
     GenerateUndirectedGraph();
     
+    PrintGraphs();
+}
+
+int Graph::getFirstVertex() {
+    return firstVertex;
+}
+
+int Graph::getLastVertex() {
+    return lastVertex;
+}
+
+void Graph::PrintGraphs() {
+    if (adjacencyListForGraph == nullptr || neighborhoodMatrixForGraph == nullptr)
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    
     std::cout << "Reprezentacja listowa grafu skierowanego:\n\n";
     adjacencyListForGraph->PrintDirectedGraph();
     std::cout << std::endl;
@@ -256,14 +271,53 @@ void Graph::CreateGraphWithRandomIntegers() {
     std::cout << std::endl;
     std::cout << "Reprezentacja macierzowa grafu nieskierowanego:\n\n";
     neighborhoodMatrixForGraph->PrintUndirectedGraph();
+    
 }
 
-int Graph::getFirstVertex() {
-    return firstVertex;
+void Graph::PrintAllPrimsAlgorithms() {
+    if (adjacencyListForGraph == nullptr || neighborhoodMatrixForGraph == nullptr)
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    adjacencyListForGraph->PrimsAlgorithm();
+    std::cout << "MST -> algorytm Prima - listowo: " << std::endl;
+    adjacencyListForGraph->PrintMST();
+    neighborhoodMatrixForGraph->PrimsAlgorithm();
+    std::cout << std::endl;
+    std::cout << "MST -> algorytm Prima - macierzowo: " << std::endl;
+    neighborhoodMatrixForGraph->PrintMST();
 }
 
-int Graph::getLastVertex() {
-    return lastVertex;
+void Graph::PrintAllKruskalsAlgorithms() {
+    if (adjacencyListForGraph == nullptr || neighborhoodMatrixForGraph == nullptr)
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    adjacencyListForGraph->KruskalsAlgorithm();
+    std::cout << "MST -> algorytm Kruskala - listowo: " << std::endl;
+    adjacencyListForGraph->PrintMST();
+    neighborhoodMatrixForGraph->KruskalsAlgorithm();
+    std::cout << std::endl;
+    std::cout << "MST -> algorytm Kruskala - macierzowo: " << std::endl;
+    neighborhoodMatrixForGraph->PrintMST();
+}
+
+void Graph::PrintAllDijkstrasAlgorithms() {
+    if (adjacencyListForGraph == nullptr || neighborhoodMatrixForGraph == nullptr)
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    adjacencyListForGraph->DijkstrasAlgorithm(getFirstVertex());
+    std::cout << "Shortest Path -> algorytm Dijkstry - listowo: " << std::endl;
+    adjacencyListForGraph->PrintShortestPath();
+    neighborhoodMatrixForGraph->DijkstrasAlgorithm(getFirstVertex());
+    std::cout << "Shortest Path -> algorytm Dijkstry - macierzowo: " << std::endl;
+    neighborhoodMatrixForGraph->PrintShortestPath();
+}
+
+void Graph::PrintAllBellmanFordsAlgorithms() {
+    if (adjacencyListForGraph == nullptr || neighborhoodMatrixForGraph == nullptr)
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    adjacencyListForGraph->Bellman_FordAlgorithm(getFirstVertex());
+    std::cout << "Shortest Path -> algorytm Bellmana_Forda - listowo: " << std::endl;
+    adjacencyListForGraph->PrintShortestPath();
+    neighborhoodMatrixForGraph->Bellman_FordAlgorithm(getFirstVertex());
+    std::cout << "Shortest Path -> algorytm Bellmana_Forda - macierzowo: " << std::endl;
+    neighborhoodMatrixForGraph->PrintShortestPath();
 }
 
 

@@ -43,7 +43,7 @@ public:
     
     ~AdjacencyListForGraph();
     
-    int GetVerticeDegree(int vertex);
+    int GetVertexDegree(int vertex);
     
     void AddEdgeForDirectedGraph(int vertex_from, int vertex_to, int vertex_weight);
     
@@ -53,9 +53,9 @@ public:
     
     void PrintUndirectedGraph();
     
-    void PrimsAlgorithm(int firstVertex);
+    void PrimsAlgorithm();
     
-    void KruskalsAlgorithm(int firstVertex);
+    void KruskalsAlgorithm();
     
     void DijkstrasAlgorithm(int firstVertex);
     
