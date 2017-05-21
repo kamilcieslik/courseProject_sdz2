@@ -66,6 +66,9 @@ int NeighborhoodMatrixForGraph::GetWeightOfEdge(int vertex_from, int vertex_to) 
 }
 
 void NeighborhoodMatrixForGraph::PrintDirectedGraph() {
+    if (arrayOfMatrixDirectedGraph == nullptr) {
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    }
     std::cout << "W/K\t";
     for (int i = 0; i < amountOfVertices; i++) {
         std::cout << i << ".\t";
@@ -92,6 +95,9 @@ void NeighborhoodMatrixForGraph::PrintDirectedGraph() {
 }
 
 void NeighborhoodMatrixForGraph::PrintUndirectedGraph() {
+    if (arrayOfMatrixUndirectedGraph == nullptr) {
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    }
     std::cout << "W/K\t";
     for (int i = 0; i < amountOfVertices; i++) {
         std::cout << i << ".\t";
@@ -201,6 +207,9 @@ void NeighborhoodMatrixForGraph::KruskalsAlgorithm(int firstVertex) {
 }
 
 void NeighborhoodMatrixForGraph::PrintMST() {
+    if (MST_Prim == nullptr) {
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    }
     for (auto i = 0; i < amountOfVertices - 1; i++) {
         std::cout << "(" << MST_Prim[i].vertex_from << "," << MST_Prim[i].vertex_to << ")\t\t"
                   << MST_Prim[i].edge_weight
@@ -321,6 +330,9 @@ void NeighborhoodMatrixForGraph::Bellman_FordAlgorithm(int firstVertex) {
 }
 
 void NeighborhoodMatrixForGraph::PrintShortestPath() {
+    if (currentDistancesFromFirstVertex == nullptr) {
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    }
     int numberOfPredecessors = 0;
     for (auto i = 0; i < amountOfVertices; i++) {
         

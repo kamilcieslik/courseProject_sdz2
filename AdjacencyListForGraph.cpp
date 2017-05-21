@@ -104,6 +104,9 @@ int AdjacencyListForGraph::GetVerticeDegree(int vertex) {
 }
 
 void AdjacencyListForGraph::PrintDirectedGraph() {
+    if (arrayOfAdjListDirectedGraph == nullptr) {
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    }
     for (auto i = 0; i < amountOfVertices; ++i) {
         auto pointerToNodesOfAdjacencyList = arrayOfAdjListDirectedGraph[i].head;
         std::cout << "Adj[" << i << "]: ";
@@ -118,6 +121,9 @@ void AdjacencyListForGraph::PrintDirectedGraph() {
 }
 
 void AdjacencyListForGraph::PrintUndirectedGraph() {
+    if (arrayOfAdjListUndirectedGraph == nullptr) {
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    }
     for (auto i = 0; i < amountOfVertices; ++i) {
         auto pointerToNodesOfAdjacencyList = arrayOfAdjListUndirectedGraph[i].head;
         std::cout << "Adj[" << i << "]: ";
@@ -217,6 +223,9 @@ void AdjacencyListForGraph::KruskalsAlgorithm(int firstVertex) {
 }
 
 void AdjacencyListForGraph::PrintMST() {
+    if (MST_Prim == nullptr) {
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    }
     for (auto i = 0; i < amountOfVertices - 1; i++) {
         std::cout << "(" << MST_Prim[i].vertex_from << "," << MST_Prim[i].vertex_to << ")\t\t"
                   << MST_Prim[i].edge_weight
@@ -332,6 +341,9 @@ void AdjacencyListForGraph::Bellman_FordAlgorithm(int firstVertex) {
 }
 
 void AdjacencyListForGraph::PrintShortestPath() {
+    if (currentDistancesFromFirstVertex == nullptr) {
+        throw std::logic_error("Graf nie został zainicjalizowany.");
+    }
     int numberOfPredecessors = 0;
     for (auto i = 0; i < amountOfVertices; i++) {
         
