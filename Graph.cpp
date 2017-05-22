@@ -8,18 +8,20 @@
 #include <fstream>
 
 Graph::Graph() : maximumWeightOfEdge(9), amountOfEdgesInAdjacencyListOfDirectedGraph(0),
-                 amountOfEdgesInDirectedGraph(0), amountOfEdgesInUndirectedGraph(0), adjacencyListForGraph(nullptr),
-                 neighborhoodMatrixForGraph(nullptr), edgesOfDirectedGraph(nullptr), edgesOfUndirectedGraph(nullptr) {
+                 amountOfEdgesInDirectedGraph(0), amountOfEdgesToDoubleInUndirectedGraph(0),
+                 adjacencyListForGraph(nullptr),
+                 neighborhoodMatrixForGraph(nullptr), edgesOfDirectedGraph(nullptr), edgesOfUndirectedGraph(nullptr),
+                 negativeEdgeWeights(false) {
     
 }
 
 void Graph::DeleteGraph() {
     if (amountOfEdgesInDirectedGraph != 0)
-        for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
+        for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++) {
             delete[] edgesOfDirectedGraph[i];
         }
-    if (amountOfEdgesInUndirectedGraph != 0)
-        for (int i = 0; i < amountOfEdgesInUndirectedGraph; i++) {
+    if (amountOfEdgesToDoubleInUndirectedGraph != 0)
+        for (auto i = 0; i < amountOfEdgesToDoubleInUndirectedGraph; i++) {
             delete[] edgesOfUndirectedGraph[i];
         }
     delete[] edgesOfDirectedGraph;
@@ -44,6 +46,7 @@ Graph::~Graph() {
 void Graph::ReadGraphFromFile(std::string path) {
     if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr ||
         edgesOfUndirectedGraph != nullptr) {
+        negativeEdgeWeights = false;
         DeleteGraph();
     }
     std::fstream file(path, std::ios::in);
@@ -54,40 +57,39 @@ void Graph::ReadGraphFromFile(std::string path) {
         file >> lastVertex;
         if (file.fail()) throw std::logic_error("Błąd odczytu danych w pliku.");
         else {
-    
+            
             edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
             adjacencyListForGraph = new AdjacencyListForGraph(amountOfVertices);
             neighborhoodMatrixForGraph = new NeighborhoodMatrixForGraph(amountOfVertices);
-    
+            
             int vertex_from, vertex_to, edge_weight;
-            for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
+            for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++) {
                 file >> vertex_from;
                 file >> vertex_to;
                 file >> edge_weight;
-        
+                if (edge_weight<0) negativeEdgeWeights = true;
+                
                 if (file.fail()) throw std::logic_error("Błąd odczytu danych w pliku.");
                 else {
-    
+                    
                     edgesOfDirectedGraph[i] = new int[3];
                     edgesOfDirectedGraph[i][0] = vertex_from;
                     edgesOfDirectedGraph[i][1] = vertex_to;
                     edgesOfDirectedGraph[i][2] = edge_weight;
-    
+                    
                     adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
                     neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
                 }
             }
-    
+            
             file.close();
-    
+            
             GenerateUndirectedGraph();
-    
+            
             PrintGraphs();
         }
-    }
-    else
-    {
-        throw std::logic_error("Błąd otwarcia pliku.");
+    } else {
+        std::cout << "Błąd otwarcia pliku.\n";
     }
 }
 
@@ -98,7 +100,7 @@ void Graph::SaveToFile() {
     if (file.good()) {
         file << amountOfEdgesInDirectedGraph << " " << amountOfVertices << " " << firstVertex << " "
              << lastVertex << "\n";
-        for (int i = 0; i < amountOfEdgesInDirectedGraph; i++)
+        for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++)
             file << edgesOfDirectedGraph[i][0] << " " << edgesOfDirectedGraph[i][1] << " " << edgesOfDirectedGraph[i][2]
                  << "\n";
         file.close();
@@ -106,51 +108,52 @@ void Graph::SaveToFile() {
 }
 
 void Graph::GenerateUndirectedGraph() {
-    bool *duplicate;
-    duplicate = new bool[amountOfEdgesInDirectedGraph];
-    for (int i = 0; i < amountOfEdgesInDirectedGraph; i++)
-        duplicate[i] = false;
+    bool *edgeConnectingTheseVerticesAlreadyExist;
+    edgeConnectingTheseVerticesAlreadyExist = new bool[amountOfEdgesInDirectedGraph];
+    for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++)
+        edgeConnectingTheseVerticesAlreadyExist[i] = true;
     edgesOfUndirectedGraph = new int *[amountOfEdgesInDirectedGraph];
-    for (int i = 0; i < amountOfEdgesInDirectedGraph; i++)
+    for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++)
         edgesOfUndirectedGraph[i] = nullptr;
     
-    for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
-        for (int j = 0; j < i; j++) {
+    for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++) {
+        for (auto j = 0; j < i; j++) {
             if ((edgesOfDirectedGraph[i][0] == edgesOfDirectedGraph[j][0] &&
                  edgesOfDirectedGraph[i][1] == edgesOfDirectedGraph[j][1]) ||
                 (edgesOfDirectedGraph[i][1] == edgesOfDirectedGraph[j][0] &&
                  edgesOfDirectedGraph[i][0] == edgesOfDirectedGraph[j][1])) {
-                duplicate[i] = false;
+                edgeConnectingTheseVerticesAlreadyExist[i] = true;
                 break;
             }
-            duplicate[i] = true;
+            edgeConnectingTheseVerticesAlreadyExist[i] = false;
         }
     }
     
     int vertex_from, vertex_to, edge_weight;
-    duplicate[0] = true;
-    amountOfEdgesInUndirectedGraph = 0;
-    for (int i = 0; i < amountOfEdgesInDirectedGraph; i++) {
-        if (duplicate[i]) {
-            edgesOfUndirectedGraph[amountOfEdgesInUndirectedGraph] = new int[3];
-            vertex_from = edgesOfUndirectedGraph[amountOfEdgesInUndirectedGraph][0] = edgesOfDirectedGraph[i][0];
-            vertex_to = edgesOfUndirectedGraph[amountOfEdgesInUndirectedGraph][1] = edgesOfDirectedGraph[i][1];
-            edge_weight = edgesOfUndirectedGraph[amountOfEdgesInUndirectedGraph][2] = edgesOfDirectedGraph[i][2];
+    edgeConnectingTheseVerticesAlreadyExist[0] = false;
+    amountOfEdgesToDoubleInUndirectedGraph = 0;
+    for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++) {
+        if (!edgeConnectingTheseVerticesAlreadyExist[i]) {
+            edgesOfUndirectedGraph[amountOfEdgesToDoubleInUndirectedGraph] = new int[3];
+            vertex_from = edgesOfUndirectedGraph[amountOfEdgesToDoubleInUndirectedGraph][0] = edgesOfDirectedGraph[i][0];
+            vertex_to = edgesOfUndirectedGraph[amountOfEdgesToDoubleInUndirectedGraph][1] = edgesOfDirectedGraph[i][1];
+            edge_weight = edgesOfUndirectedGraph[amountOfEdgesToDoubleInUndirectedGraph][2] = edgesOfDirectedGraph[i][2];
             
             adjacencyListForGraph->AddEdgeForUndirectedGraph(vertex_from, vertex_to, edge_weight);
             neighborhoodMatrixForGraph->AddEdgeForUndirectedGraph(vertex_from, vertex_to, edge_weight);
             
-            amountOfEdgesInUndirectedGraph++;
+            amountOfEdgesToDoubleInUndirectedGraph++;
         }
     }
     
-    delete[] duplicate;
+    delete[] edgeConnectingTheseVerticesAlreadyExist;
 }
 
 void Graph::CreateGraphWithRandomIntegers() {
     if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr ||
         edgesOfUndirectedGraph != nullptr) {
         DeleteGraph();
+        negativeEdgeWeights = false;
     }
     std::cout << "Podaj ilość wierzchołków: " << std::endl;
     std::cin >> amountOfVertices;
@@ -181,29 +184,29 @@ void Graph::CreateGraphWithRandomIntegers() {
     edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
     
     
-    std::random_device r;
-    std::mt19937 randomEngine(r());  //GENERATOR LICZB PSEUDOLOSOWYCH
-    std::uniform_int_distribution<int> edgeWeight(1, 9);    //ROWNOMIERNY ROZKLAD PRAWDOPODOBIENSTWA
-    std::uniform_int_distribution<int> randomVertice(0, amountOfVertices - 1);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> randEdgeWeight(1, 9);
+    std::uniform_int_distribution<int> randVertice(0, amountOfVertices - 1);
     
     int vertex_from, vertex_to, edge_weight;
-    int edgesLeft = amountOfEdgesInDirectedGraph;
+    int remainingEdges = amountOfEdgesInDirectedGraph;
     
     edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
     adjacencyListForGraph = new AdjacencyListForGraph(amountOfVertices);
     neighborhoodMatrixForGraph = new NeighborhoodMatrixForGraph(amountOfVertices);
     
-    vertex_from = randomVertice(randomEngine);
+    vertex_from = randVertice(gen);
     
     int i = 0;
     int j = 0;
-    while (j < (amountOfVertices - 1) && edgesLeft > 0) //PIERWSZA PETLA LACZY WSZYSTKIE WIERZCHOLKI ABY GRAF BYL SPOJNY
-    {
+    while (j < (amountOfVertices - 1) && remainingEdges > 0) {
         do {
-            vertex_to = randomVertice(randomEngine);
+            vertex_to = randVertice(gen);
         } while (adjacencyListForGraph->GetVertexDegree(vertex_to) > 0 || vertex_to ==
-                                                                          vertex_from);  //LOSUJ WIERZCHOLEK DOCELOWY DOPOKI NIE WYLOSUJESZ NIEPOLOCZONEGO ZADNA KRAWEDZIA WIERZCHOLKA ALBO NIE WYLOSUJESZ 2 ROZNYCH WIERCHOLKOW
-        edge_weight = edgeWeight(randomEngine);
+                                                                          vertex_from);
+        edge_weight = randEdgeWeight(gen);
+        if (edge_weight<0) negativeEdgeWeights = true;
         
         edgesOfDirectedGraph[i] = new int[3];
         edgesOfDirectedGraph[i][0] = vertex_from;
@@ -215,19 +218,18 @@ void Graph::CreateGraphWithRandomIntegers() {
         
         vertex_from = vertex_to;
         
-        --edgesLeft;
+        --remainingEdges;
         j++;
         i++;
     }
     
-    for (int k = 0; k < edgesLeft; ++k) //DRUGA PETLA DODAJE POZOSTALE - LOSOWE KRAWEDZIE
-    {
+    for (auto k = 0; k < remainingEdges; ++k) {
         do {
-            vertex_from = randomVertice(randomEngine);
-            vertex_to = randomVertice(randomEngine);
-            edge_weight = edgeWeight(randomEngine);
+            vertex_from = randVertice(gen);
+            vertex_to = randVertice(gen);
+            edge_weight = randEdgeWeight(gen);
         } while (neighborhoodMatrixForGraph->GetWeightOfEdge(vertex_from, vertex_to) > 0 ||
-                 vertex_to == vertex_from);   //LOSUJ DOPOKI WYLOSUJESZ KRAWEDZ KTORA NIE ISTNIEJE
+                 vertex_to == vertex_from);
         
         edgesOfDirectedGraph[i] = new int[3];
         edgesOfDirectedGraph[i][0] = vertex_from;
@@ -301,12 +303,14 @@ void Graph::PrintAllKruskalsAlgorithms() {
 void Graph::PrintAllDijkstrasAlgorithms() {
     if (adjacencyListForGraph == nullptr || neighborhoodMatrixForGraph == nullptr)
         throw std::logic_error("Graf nie został zainicjalizowany.");
+    if (negativeEdgeWeights == true)
+        std::cout << "Graf zawiera ujemne krawędzie.\nAlgorytm Dijkstry może nie działać prawidłowo." << std::endl;
     adjacencyListForGraph->DijkstrasAlgorithm(getFirstVertex());
     std::cout << "Shortest Path -> algorytm Dijkstry - listowo: " << std::endl;
-    adjacencyListForGraph->PrintShortestPath();
+    adjacencyListForGraph->PrintShortestPath(getFirstVertex());
     neighborhoodMatrixForGraph->DijkstrasAlgorithm(getFirstVertex());
     std::cout << "Shortest Path -> algorytm Dijkstry - macierzowo: " << std::endl;
-    neighborhoodMatrixForGraph->PrintShortestPath();
+    neighborhoodMatrixForGraph->PrintShortestPath(getFirstVertex());
 }
 
 void Graph::PrintAllBellmanFordsAlgorithms() {
@@ -314,10 +318,105 @@ void Graph::PrintAllBellmanFordsAlgorithms() {
         throw std::logic_error("Graf nie został zainicjalizowany.");
     adjacencyListForGraph->Bellman_FordAlgorithm(getFirstVertex());
     std::cout << "Shortest Path -> algorytm Bellmana_Forda - listowo: " << std::endl;
-    adjacencyListForGraph->PrintShortestPath();
+    adjacencyListForGraph->PrintShortestPath(getFirstVertex());
     neighborhoodMatrixForGraph->Bellman_FordAlgorithm(getFirstVertex());
     std::cout << "Shortest Path -> algorytm Bellmana_Forda - macierzowo: " << std::endl;
-    neighborhoodMatrixForGraph->PrintShortestPath();
+    neighborhoodMatrixForGraph->PrintShortestPath(getFirstVertex());
+}
+
+void Graph::CreateGraphWithRandomIntegers(int amountOfVertices, double density) {
+    if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr ||
+        edgesOfUndirectedGraph != nullptr) {
+        DeleteGraph();
+        negativeEdgeWeights = false;
+    }
+    this->amountOfVertices=amountOfVertices;
+    if (amountOfVertices < 2) {
+        throw std::invalid_argument("Liczba wierzchołków nie może być mniejsza od 2.");
+    }
+    
+    int minimumAmountOfEdges, maximumAmountOfEdges;
+    minimumAmountOfEdges = amountOfVertices - 1;
+    maximumAmountOfEdges = ((amountOfVertices - 1) * amountOfVertices) / 2;
+    
+    auto minimumDensity = (int) ceil((((minimumAmountOfEdges * 100) / maximumAmountOfEdges)));
+    
+    if (density < minimumDensity) {
+        throw std::invalid_argument(
+                "Gęstość grafu nie może być mniejsza od gęstości minimalndej - " + std::to_string(minimumDensity) +
+                " %.");
+    }
+    if (density > 100) {
+        throw std::invalid_argument("Gęstość grafu nie może być większa od 100 %.");
+    }
+    
+    amountOfEdgesInDirectedGraph = (int) ceil(maximumAmountOfEdges * (density / 100));
+    amountOfEdgesInDirectedGraph *= 2;
+    edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
+    
+    
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> randEdgeWeight(1, 9);
+    std::uniform_int_distribution<int> randVertice(0, amountOfVertices - 1);
+    
+    int vertex_from, vertex_to, edge_weight;
+    int remainingEdges = amountOfEdgesInDirectedGraph;
+    
+    edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
+    adjacencyListForGraph = new AdjacencyListForGraph(amountOfVertices);
+    neighborhoodMatrixForGraph = new NeighborhoodMatrixForGraph(amountOfVertices);
+    
+    vertex_from = randVertice(gen);
+    
+    int i = 0;
+    int j = 0;
+    while (j < (amountOfVertices - 1) && remainingEdges > 0) {
+        do {
+            vertex_to = randVertice(gen);
+        } while (adjacencyListForGraph->GetVertexDegree(vertex_to) > 0 || vertex_to ==
+                                                                          vertex_from);
+        edge_weight = randEdgeWeight(gen);
+        if (edge_weight<0) negativeEdgeWeights = true;
+        
+        edgesOfDirectedGraph[i] = new int[3];
+        edgesOfDirectedGraph[i][0] = vertex_from;
+        edgesOfDirectedGraph[i][1] = vertex_to;
+        edgesOfDirectedGraph[i][2] = edge_weight;
+        
+        adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+        neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+        
+        vertex_from = vertex_to;
+        
+        --remainingEdges;
+        j++;
+        i++;
+    }
+    
+    for (auto k = 0; k < remainingEdges; ++k) {
+        do {
+            vertex_from = randVertice(gen);
+            vertex_to = randVertice(gen);
+            edge_weight = randEdgeWeight(gen);
+        } while (neighborhoodMatrixForGraph->GetWeightOfEdge(vertex_from, vertex_to) > 0 ||
+                 vertex_to == vertex_from);
+        
+        edgesOfDirectedGraph[i] = new int[3];
+        edgesOfDirectedGraph[i][0] = vertex_from;
+        edgesOfDirectedGraph[i][1] = vertex_to;
+        edgesOfDirectedGraph[i][2] = edge_weight;
+        
+        adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+        neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+        
+        i++;
+    }
+    
+    firstVertex = edgesOfDirectedGraph[0][0];
+    lastVertex = edgesOfDirectedGraph[amountOfVertices - 1][0];
+    
+    GenerateUndirectedGraph();
 }
 
 

@@ -15,12 +15,13 @@ private:
     int amountOfEdgesInAdjacencyListOfDirectedGraph;
     int maximumWeightOfEdge;
     int amountOfEdgesInDirectedGraph;
-    int amountOfEdgesInUndirectedGraph;
+    int amountOfEdgesToDoubleInUndirectedGraph;
     int amountOfVertices;
     int firstVertex;
     int lastVertex;
     int **edgesOfDirectedGraph;
     int **edgesOfUndirectedGraph;
+    bool negativeEdgeWeights;
     
 public:
     AdjacencyListForGraph *adjacencyListForGraph;
@@ -33,6 +34,8 @@ public:
     void DeleteGraph();
     
     void CreateGraphWithRandomIntegers();
+    
+    void CreateGraphWithRandomIntegers(int amountOfVertices, double density);
     
     void ReadGraphFromFile(std::string path);
     

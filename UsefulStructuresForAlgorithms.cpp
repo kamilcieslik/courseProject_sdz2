@@ -28,7 +28,7 @@ Edge Heap::GetEdgeFromTheBeginning() {
 void Heap::AddEdge(Edge newEdge, int edge_weight) {
     Edge *temporaryTable;
     temporaryTable = new Edge[numberOfEdges + 1];
-    for (int i = 0; i < numberOfEdges; i++) {
+    for (auto i = 0; i < numberOfEdges; i++) {
         temporaryTable[i] = arrayOfEdges[i];
     }
     delete[] arrayOfEdges;
@@ -114,7 +114,7 @@ Vertex HeapForVertices::GetVertexFromTheBeginning() {
 void HeapForVertices::AddVertex(Vertex newVertex, int vertex_distanceFromFirstVertex) {
     Vertex *temporaryTable;
     temporaryTable = new Vertex[numberOfVertices + 1];
-    for (int i = 0; i < numberOfVertices; i++) {
+    for (auto i = 0; i < numberOfVertices; i++) {
         temporaryTable[i] = arrayOfVertices[i];
     }
     delete[] arrayOfVertices;
@@ -175,7 +175,7 @@ int HeapForVertices::getAmountOfVertices() {
 
 void HeapForVertices::changeDistanceFromFirstVertex(int vertex, int vertex_distanceFromFirstVertex) {
     int index;
-    for (int i = 0; i < numberOfVertices; i++) {
+    for (auto i = 0; i < numberOfVertices; i++) {
         if (arrayOfVertices[i].vertex == vertex) {
             index=i;
             arrayOfVertices[i].distanceFromFirstVertex=vertex_distanceFromFirstVertex;
@@ -195,7 +195,7 @@ void HeapForVertices::changeDistanceFromFirstVertex(int vertex, int vertex_dista
 }
 
 bool HeapForVertices::isIn(int vertex) {
-    for (int i = 0; i < numberOfVertices; i++) {
+    for (auto i = 0; i < numberOfVertices; i++) {
         if (arrayOfVertices[i].vertex == vertex) {
             return true;
         }

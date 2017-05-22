@@ -63,7 +63,7 @@ public:
     
     void PrintMST();
     
-    void PrintShortestPath();
+    void PrintShortestPath(int firstVertex);
 };
 
 

@@ -12,6 +12,10 @@ set(SOURCE_FILES
         NeighborhoodMatrixForGraph.h
         UsefulStructuresForAlgorithms.cpp
         UsefulStructuresForAlgorithms.h
+        TimeMeasurement.cpp
+        TimeMeasurement.h
+        AlgorithmTest.cpp
+        AlgorithmTest.h
         main.cpp)
 
 add_executable(sdizo_2 ${SOURCE_FILES})

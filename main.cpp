@@ -1,7 +1,11 @@
 #include <iostream>
+#include <fstream>
+#include <vector>
 #include "Graph.h"
+#include "TimeMeasurement.h"
+#include "AlgorithmTest.h"
 
-#pragma comment(linker, "/STACK:100000000")
+//#pragma comment(linker, "/STACK:100000000")
 
 void displayMenu(const std::string &info, const std::string &alghoritm_1,
                  const std::string &alghoritm_2) //Menu dla tabeli i listy.
@@ -14,7 +18,6 @@ void displayMenu(const std::string &info, const std::string &alghoritm_1,
     std::cout << "4. Algorytm - " << alghoritm_1 << " (macierzowo i listowo)." << std::endl;
     std::cout << "5. Algorytm - " << alghoritm_2 << " (macierzowo i listowo)." << std::endl;
     std::cout << "8. Zapisz graf do pliku." << std::endl;
-    std::cout << "9. Test (pomiary)." << std::endl;
     std::cout << "0. Powrot do menu." << std::endl;
     std::cout << "Podaj opcje:";
 }
@@ -34,8 +37,7 @@ void menu_mst() //Obsługa tabeli.
                 std::cin >> path;
                 try {
                     g.ReadGraphFromFile(path);
-                } catch (std::logic_error &e)
-                {
+                } catch (std::logic_error &e) {
                     std::cout << e.what() << std::endl;
                 }
                 break;
@@ -44,8 +46,7 @@ void menu_mst() //Obsługa tabeli.
                 try {
                     g.CreateGraphWithRandomIntegers();
                 }
-                catch (std::invalid_argument &e)
-                {
+                catch (std::invalid_argument &e) {
                     std::cout << e.what() << std::endl;
                 }
                 break;
@@ -81,16 +82,11 @@ void menu_mst() //Obsługa tabeli.
                 try {
                     g.SaveToFile();
                 }
-                catch (std::logic_error &e)
-                {
+                catch (std::logic_error &e) {
                     std::cout << e.what() << std::endl;
                 }
                 break;
                 
-            case 9: //Test - pomiary czasowe.
-               
-                break;
-            
             default:
                 break;
         }
@@ -118,8 +114,7 @@ void menu_the_shortest_path() //Obsługa tabeli.
                 try {
                     g.CreateGraphWithRandomIntegers();
                 }
-                catch (std::invalid_argument &e)
-                {
+                catch (std::invalid_argument &e) {
                     std::cout << e.what() << std::endl;
                 }
                 break;
@@ -149,25 +144,20 @@ void menu_the_shortest_path() //Obsługa tabeli.
                 catch (std::logic_error &e) {
                     std::cout << e.what() << std::endl;
                 }
-                catch (std::underflow_error &e_2){ //Cykl ujemny.
+                catch (std::underflow_error &e_2) { //Cykl ujemny.
                     std::cout << e_2.what() << std::endl;
                 }
                 break;
-    
+            
             case 8: //Zapis grafu do pliku.
                 try {
                     g.SaveToFile();
                 }
-                catch (std::logic_error &e)
-                {
+                catch (std::logic_error &e) {
                     std::cout << e.what() << std::endl;
                 }
                 break;
-    
-            case 9: //Test - pomiary czasowe.
-        
-                break;
-    
+                
             default:
                 break;
         }
@@ -182,6 +172,7 @@ int main() {
         std::cout << "==== MENU GŁÓWNE ===" << std::endl;
         std::cout << "1. Wyznaczanie minimalnego drzewa rozpinającego." << std::endl;
         std::cout << "2. Wyznaczanie najkrótszej ścieżki w grafie." << std::endl;
+        std::cout << "3. Testy czasowe." << std::endl;
         std::cout << "0. Wyjscie." << std::endl;
         std::cout << "Podaj opcje:";
         std::cin >> option;
@@ -195,8 +186,15 @@ int main() {
             case 2:
                 menu_the_shortest_path();
                 break;
-            
-            default:
+            case 3:
+                int increaseAmountOfVertex;
+                int numberOfRepetitions;
+                std::cout << "O ile ma się zwiększać ilość wierzchołków poczynając od 50? ";
+                std::cin >> increaseAmountOfVertex;
+                std::cout << "Podaj ilość instancji każdego zestawu danych w celu uśrednienia wyniku ";
+                std::cin >> numberOfRepetitions;
+                AlgorithmTest test;
+                test.Test(increaseAmountOfVertex, numberOfRepetitions);
                 break;
         }
         

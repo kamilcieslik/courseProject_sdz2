@@ -13,7 +13,7 @@ AdjacencyListForGraph::AdjacencyListForGraph(int amountOfVertices) : numberOfEdg
     this->amountOfVertices = amountOfVertices;
     arrayOfAdjListDirectedGraph = new AdjacencyList<int>[amountOfVertices];
     arrayOfAdjListUndirectedGraph = new AdjacencyList<int>[amountOfVertices];
-    for (int i = 0; i < amountOfVertices; ++i) {
+    for (auto i = 0; i < amountOfVertices; ++i) {
         arrayOfAdjListDirectedGraph[i].head = nullptr;
         arrayOfAdjListUndirectedGraph[i].head = nullptr;
     }
@@ -330,7 +330,8 @@ void AdjacencyListForGraph::Bellman_FordAlgorithm(int firstVertex) {
     }
 }
 
-void AdjacencyListForGraph::PrintShortestPath() {
+void AdjacencyListForGraph::PrintShortestPath(int firstVertex) {
+    std::cout << "Start = " << firstVertex << std::endl;
     int numberOfPredecessors = 0;
     for (auto i = 0; i < amountOfVertices; i++) {
         
