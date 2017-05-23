@@ -16,7 +16,7 @@ class AlgorithmTest {
 public:
     AlgorithmTest();
     ~AlgorithmTest();
-    void Test(int increaseAmountOfVertex, int numberOfRepetitions);
+    void Test(int increaseAmountOfVertex, int numberOfRepetitions, int numberOfIncreaseAmountOfVertex = 6);
 };
 
 

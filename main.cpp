@@ -188,13 +188,16 @@ int main() {
                 break;
             case 3:
                 int increaseAmountOfVertex;
+                int numberOfIncreaseAmountOfVertex;
                 int numberOfRepetitions;
                 std::cout << "O ile ma się zwiększać ilość wierzchołków poczynając od 50? ";
                 std::cin >> increaseAmountOfVertex;
+                std::cout << "Ile razy ma się zwiększać ilość wierzchołków poczynając od 50? ";
+                std::cin >> numberOfIncreaseAmountOfVertex;
                 std::cout << "Podaj ilość instancji każdego zestawu danych w celu uśrednienia wyniku ";
                 std::cin >> numberOfRepetitions;
                 AlgorithmTest test;
-                test.Test(increaseAmountOfVertex, numberOfRepetitions);
+                test.Test(increaseAmountOfVertex, numberOfRepetitions, numberOfIncreaseAmountOfVertex);
                 break;
         }
         

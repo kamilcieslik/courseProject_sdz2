@@ -2,6 +2,7 @@
 // Created by mrfarinq on 22.05.17.
 //
 
+#include <cmath>
 #include "AlgorithmTest.h"
 
 AlgorithmTest::AlgorithmTest() {
@@ -12,7 +13,7 @@ AlgorithmTest::~AlgorithmTest() {
 
 }
 
-void AlgorithmTest::Test(int increaseAmountOfVertex, int numberOfRepetitions) {
+void AlgorithmTest::Test(int increaseAmountOfVertex, int numberOfRepetitions, int numberOfIncreaseAmountOfVertex) {
     Graph g;
     TimeMeasurement t;
     std::vector<double> results;
@@ -27,7 +28,7 @@ void AlgorithmTest::Test(int increaseAmountOfVertex, int numberOfRepetitions) {
          << ". losowych instancji." << std::endl << std::endl << std::endl;
     
     for (auto k = 0; k < 4; k++) {
-        for (auto i = 0; i < 6; i++) {
+        for (auto i = 0; i < numberOfIncreaseAmountOfVertex; i++) {
             results.push_back((double &&) amountOfVertex);
             
             //Algorytm Prima -> listowo
@@ -157,7 +158,7 @@ void AlgorithmTest::Test(int increaseAmountOfVertex, int numberOfRepetitions) {
         
         file << "Gęstość: " << density << std::endl;
         file
-                << "Il_wierz\tPrim_listowo\tPrim_macierzowo\tKruskal_listowo\tKruskal_macierzowo\tDijkstra_listowo\tDijkstra_macierzowo\tFord_listowo\tFord_macierzowo\n";
+                << "Il_w\tPrim_list\tPrim_mac\tKruskal_list\tKruskal_mac\tDijkstra_list\tDijkstra_mac\tFord_list\tFord_mac\n";
         for (int i = 0; i < results.size(); i++) {
             file << results[i] << "\t";
             if (((i + 1) % 9) == 0) {
@@ -181,6 +182,8 @@ void AlgorithmTest::Test(int increaseAmountOfVertex, int numberOfRepetitions) {
         amountOfVertex = firstAmountOfVertex;
     }
     
+    file << std::endl << "Czas zakończenia testów - " << t.currentDateTime() << "." << std::endl;
     file.close();
+    
 }
 
