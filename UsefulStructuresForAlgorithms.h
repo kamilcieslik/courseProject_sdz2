@@ -18,10 +18,11 @@ struct Edge {
 
 class Heap {
 private:
+    int size;
     int numberOfEdges;
     Edge *arrayOfEdges;
 public:
-    Heap();
+    Heap(int size);
     
     ~Heap();
     
@@ -31,23 +32,22 @@ public:
     
     void DeleteEdgeFromTheTop();
     
-    int getAmountOfEdges();
-    
 };
 
 struct Vertex {
     int vertex = 0;
-    int distanceFromFirstVertex=0;
+    int distanceFromFirstVertex = 0;
     
     void AddVertex(int vertex, int distanceFromFirstVertex);
 };
 
 class HeapForVertices {
 private:
-    int numberOfVertices;
+    int size;
+    int amountOfVertices;
     Vertex *arrayOfVertices;
 public:
-    HeapForVertices();
+    HeapForVertices(int size);
     
     ~HeapForVertices();
     

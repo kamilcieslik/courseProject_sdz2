@@ -43,8 +43,6 @@ public:
     
     ~AdjacencyListForGraph();
     
-    int GetVertexDegree(int vertex);
-    
     void AddEdgeForDirectedGraph(int vertex_from, int vertex_to, int vertex_weight);
     
     void AddEdgeForUndirectedGraph(int vertex_from, int vertex_to, int vertex_weight);

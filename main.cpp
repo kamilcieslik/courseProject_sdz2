@@ -1,11 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include "Graph.h"
 #include "TimeMeasurement.h"
 #include "AlgorithmTest.h"
 
-//#pragma comment(linker, "/STACK:100000000")
 
 void displayMenu(const std::string &info, const std::string &alghoritm_1,
                  const std::string &alghoritm_2) //Menu dla tabeli i listy.
@@ -51,7 +49,7 @@ void menu_mst() //Obsługa tabeli.
                 }
                 break;
             
-            case 3: //Wyświetlanie grafu (macierzowo i listowo).
+            case 3: //Wyświetlanie grafu (macierzowo i listowo w wersji skierowanej oraz nieskierowanej).
                 try {
                     g.PrintGraphs();
                 }
@@ -86,7 +84,7 @@ void menu_mst() //Obsługa tabeli.
                     std::cout << e.what() << std::endl;
                 }
                 break;
-                
+            
             default:
                 break;
         }
@@ -119,7 +117,7 @@ void menu_the_shortest_path() //Obsługa tabeli.
                 }
                 break;
             
-            case 3: //Wyświetlanie grafu (macierzowo i listowo).
+            case 3: //Wyświetlanie grafu (macierzowo i listowo w wersji skierowanej oraz nieskierowanej).
                 try {
                     g.PrintGraphs();
                 }
@@ -157,7 +155,7 @@ void menu_the_shortest_path() //Obsługa tabeli.
                     std::cout << e.what() << std::endl;
                 }
                 break;
-                
+            
             default:
                 break;
         }

@@ -20,7 +20,6 @@ private:
     int firstVertex;
     int lastVertex;
     int **edgesOfDirectedGraph;
-    int **edgesOfUndirectedGraph;
     bool negativeEdgeWeights;
     
 public:
@@ -44,8 +43,6 @@ public:
     void SaveToFile();
     
     int getFirstVertex();
-    
-    int getLastVertex();
     
     void PrintGraphs();
     

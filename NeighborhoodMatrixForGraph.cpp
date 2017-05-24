@@ -61,10 +61,6 @@ void NeighborhoodMatrixForGraph::AddEdgeForUndirectedGraph(int vertex_from, int 
     arrayOfMatrixUndirectedGraph[vertex_to][vertex_from] = edge_weight;
 }
 
-int NeighborhoodMatrixForGraph::GetWeightOfEdge(int vertex_from, int vertex_to) {
-    return arrayOfMatrixDirectedGraph[vertex_from][vertex_to];
-}
-
 void NeighborhoodMatrixForGraph::PrintDirectedGraph() {
     std::cout << "W/K\t";
     for (auto i = 0; i < amountOfVertices; i++) {
@@ -118,7 +114,7 @@ void NeighborhoodMatrixForGraph::PrintUndirectedGraph() {
 }
 
 void NeighborhoodMatrixForGraph::PrimsAlgorithm() {
-    Heap heapForEdges;
+    Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     bool *visited = new bool[amountOfVertices];
     
     for (auto i = 0; i < amountOfVertices; i++) {
@@ -161,7 +157,7 @@ void NeighborhoodMatrixForGraph::PrimsAlgorithm() {
 }
 
 void NeighborhoodMatrixForGraph::KruskalsAlgorithm() {
-    Heap heapForEdges;
+    Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     DisjointSetDataStructure disjointSetForVertex(amountOfVertices);
     
     for (auto i = 0; i < amountOfVertices; i++) {
@@ -210,7 +206,7 @@ void NeighborhoodMatrixForGraph::PrintMST() {
 }
 
 void NeighborhoodMatrixForGraph::DijkstrasAlgorithm(int firstVertex) {
-    HeapForVertices heapForVertices;
+    HeapForVertices heapForVertices(amountOfVertices);
     
     if (currentDistancesFromFirstVertex != nullptr) {
         delete[] currentDistancesFromFirstVertex;
@@ -304,7 +300,7 @@ void NeighborhoodMatrixForGraph::Bellman_FordAlgorithm(int firstVertex) {
         if (withoutChange) exitBF = true;
     }
     
-    if (exitBF == false) {
+    if (!exitBF) {
         for (auto j = 0; j < amountOfVertices; j++) {
             for (auto k = 0; k < amountOfVertices; k++) {
                 if (arrayOfMatrixDirectedGraph[j][k] != 0) {
@@ -323,15 +319,16 @@ void NeighborhoodMatrixForGraph::PrintShortestPath(int firstVertex) {
     int numberOfPredecessors = 0;
     for (auto i = 0; i < amountOfVertices; i++) {
         
-        std::cout << i << ": ";
+        std::cout << i << ":\t";
+        std::cout << " Koszt: " << currentDistancesFromFirstVertex[i] <<"\t";
         for (auto j = i; j > -1; j = previousVertices[j]) shortestPaths[numberOfPredecessors++] = j;
         while (numberOfPredecessors) {
             if (numberOfPredecessors == 1) {
                 std::cout << shortestPaths[--numberOfPredecessors] << ".";
             } else {
-                std::cout << shortestPaths[--numberOfPredecessors] << " <- ";
+                std::cout << shortestPaths[--numberOfPredecessors] << " -> ";
             }
         }
-        std::cout << " Koszt: " << currentDistancesFromFirstVertex[i] << std::endl;
+        std::cout<<std::endl;
     }
 }

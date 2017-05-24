@@ -10,14 +10,15 @@ void Edge::AddEdge(int vertex_from, int vertex_to, int edge_weight) {
     this->edge_weight = edge_weight;
 }
 
-Heap::Heap() {
-    arrayOfEdges = new Edge[0];
-    this->numberOfEdges = 0;
+Heap::Heap(int size): numberOfEdges(0) {
+    arrayOfEdges = new Edge[size];
+    this->size = size;
 }
 
 Heap::~Heap() {
     delete[] arrayOfEdges;
     numberOfEdges = 0;
+    size = 0;
     arrayOfEdges = nullptr;
 }
 
@@ -83,10 +84,6 @@ void Heap::DeleteEdgeFromTheTop() {
     }
 }
 
-int Heap::getAmountOfEdges() {
-    return numberOfEdges;
-}
-
 
 
 
@@ -96,14 +93,15 @@ void Vertex::AddVertex(int vertex, int distanceFromFirstVertex){
     this->distanceFromFirstVertex = distanceFromFirstVertex;
 }
 
-HeapForVertices::HeapForVertices() {
-    arrayOfVertices = new Vertex[0];
-    this->numberOfVertices = 0;
+HeapForVertices::HeapForVertices(int size): amountOfVertices(0) {
+    arrayOfVertices = new Vertex[size];
+    this->size = size;
 }
 
 HeapForVertices::~HeapForVertices() {
     delete[] arrayOfVertices;
-    numberOfVertices = 0;
+    amountOfVertices = 0;
+    size = 0;
     arrayOfVertices = nullptr;
 }
 
@@ -112,16 +110,8 @@ Vertex HeapForVertices::GetVertexFromTheBeginning() {
 }
 
 void HeapForVertices::AddVertex(Vertex newVertex, int vertex_distanceFromFirstVertex) {
-    Vertex *temporaryTable;
-    temporaryTable = new Vertex[numberOfVertices + 1];
-    for (auto i = 0; i < numberOfVertices; i++) {
-        temporaryTable[i] = arrayOfVertices[i];
-    }
-    delete[] arrayOfVertices;
-    arrayOfVertices = temporaryTable;
-    
     int i, j;
-    i = numberOfVertices++;
+    i = amountOfVertices++;
     j = (i - 1) / 2;
     
     while (i && arrayOfVertices[j].distanceFromFirstVertex > vertex_distanceFromFirstVertex) {
@@ -134,21 +124,21 @@ void HeapForVertices::AddVertex(Vertex newVertex, int vertex_distanceFromFirstVe
 }
 
 void HeapForVertices::DeleteVertexFromTheTop() {
-    if (numberOfVertices == 0) {
+    if (amountOfVertices == 0) {
         throw std::underflow_error("Kopiec jest pusty.");
     }
     
     int i, j;
     Vertex lastLeaf;
     
-    if (numberOfVertices) {
-        lastLeaf = arrayOfVertices[--numberOfVertices];
+    if (amountOfVertices) {
+        lastLeaf = arrayOfVertices[--amountOfVertices];
         
         i = 0;
         j = 1;
         
-        while (j < numberOfVertices) {
-            if ((j + 1 < numberOfVertices) && (arrayOfVertices[j + 1].distanceFromFirstVertex < arrayOfVertices[j].distanceFromFirstVertex)) j++;
+        while (j < amountOfVertices) {
+            if ((j + 1 < amountOfVertices) && (arrayOfVertices[j + 1].distanceFromFirstVertex < arrayOfVertices[j].distanceFromFirstVertex)) j++;
             if (lastLeaf.distanceFromFirstVertex <= arrayOfVertices[j].distanceFromFirstVertex) {
                 break;
             }
@@ -158,24 +148,16 @@ void HeapForVertices::DeleteVertexFromTheTop() {
         }
         
         arrayOfVertices[i] = lastLeaf;
-        
-        Vertex *temporaryTable;
-        temporaryTable = new Vertex[numberOfVertices];
-        for (auto k = 0; k < numberOfVertices; k++) {
-            temporaryTable[k] = arrayOfVertices[k];
-        }
-        delete[] arrayOfVertices;
-        arrayOfVertices = temporaryTable;
     }
 }
 
 int HeapForVertices::getAmountOfVertices() {
-    return numberOfVertices;
+    return amountOfVertices;
 }
 
 void HeapForVertices::changeDistanceFromFirstVertex(int vertex, int vertex_distanceFromFirstVertex) {
     int index;
-    for (auto i = 0; i < numberOfVertices; i++) {
+    for (auto i = 0; i < amountOfVertices; i++) {
         if (arrayOfVertices[i].vertex == vertex) {
             index=i;
             arrayOfVertices[i].distanceFromFirstVertex=vertex_distanceFromFirstVertex;
@@ -195,7 +177,7 @@ void HeapForVertices::changeDistanceFromFirstVertex(int vertex, int vertex_dista
 }
 
 bool HeapForVertices::isIn(int vertex) {
-    for (auto i = 0; i < numberOfVertices; i++) {
+    for (auto i = 0; i < amountOfVertices; i++) {
         if (arrayOfVertices[i].vertex == vertex) {
             return true;
         }

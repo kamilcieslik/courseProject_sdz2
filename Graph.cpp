@@ -10,7 +10,7 @@
 Graph::Graph() : maximumWeightOfEdge(9), amountOfEdgesInAdjacencyListOfDirectedGraph(0),
                  amountOfEdgesInDirectedGraph(0), amountOfEdgesToDoubleInUndirectedGraph(0),
                  adjacencyListForGraph(nullptr),
-                 neighborhoodMatrixForGraph(nullptr), edgesOfDirectedGraph(nullptr), edgesOfUndirectedGraph(nullptr),
+                 neighborhoodMatrixForGraph(nullptr), edgesOfDirectedGraph(nullptr),
                  negativeEdgeWeights(false) {
     
 }
@@ -20,12 +20,7 @@ void Graph::DeleteGraph() {
         for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++) {
             delete[] edgesOfDirectedGraph[i];
         }
-    if (amountOfEdgesToDoubleInUndirectedGraph != 0)
-        for (auto i = 0; i < amountOfEdgesToDoubleInUndirectedGraph; i++) {
-            delete[] edgesOfUndirectedGraph[i];
-        }
     delete[] edgesOfDirectedGraph;
-    delete[] edgesOfUndirectedGraph;
     
     delete adjacencyListForGraph;
     delete neighborhoodMatrixForGraph;
@@ -34,7 +29,6 @@ void Graph::DeleteGraph() {
     neighborhoodMatrixForGraph = nullptr;
     
     edgesOfDirectedGraph = nullptr;
-    edgesOfUndirectedGraph = nullptr;
 }
 
 
@@ -44,8 +38,7 @@ Graph::~Graph() {
 
 
 void Graph::ReadGraphFromFile(std::string path) {
-    if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr ||
-        edgesOfUndirectedGraph != nullptr) {
+    if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr) {
         negativeEdgeWeights = false;
         DeleteGraph();
     }
@@ -67,7 +60,7 @@ void Graph::ReadGraphFromFile(std::string path) {
                 file >> vertex_from;
                 file >> vertex_to;
                 file >> edge_weight;
-                if (edge_weight<0) negativeEdgeWeights = true;
+                if (edge_weight < 0) negativeEdgeWeights = true;
                 
                 if (file.fail()) throw std::logic_error("Błąd odczytu danych w pliku.");
                 else {
@@ -112,9 +105,6 @@ void Graph::GenerateUndirectedGraph() {
     edgeConnectingTheseVerticesAlreadyExist = new bool[amountOfEdgesInDirectedGraph];
     for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++)
         edgeConnectingTheseVerticesAlreadyExist[i] = true;
-    edgesOfUndirectedGraph = new int *[amountOfEdgesInDirectedGraph];
-    for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++)
-        edgesOfUndirectedGraph[i] = nullptr;
     
     for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++) {
         for (auto j = 0; j < i; j++) {
@@ -134,10 +124,9 @@ void Graph::GenerateUndirectedGraph() {
     amountOfEdgesToDoubleInUndirectedGraph = 0;
     for (auto i = 0; i < amountOfEdgesInDirectedGraph; i++) {
         if (!edgeConnectingTheseVerticesAlreadyExist[i]) {
-            edgesOfUndirectedGraph[amountOfEdgesToDoubleInUndirectedGraph] = new int[3];
-            vertex_from = edgesOfUndirectedGraph[amountOfEdgesToDoubleInUndirectedGraph][0] = edgesOfDirectedGraph[i][0];
-            vertex_to = edgesOfUndirectedGraph[amountOfEdgesToDoubleInUndirectedGraph][1] = edgesOfDirectedGraph[i][1];
-            edge_weight = edgesOfUndirectedGraph[amountOfEdgesToDoubleInUndirectedGraph][2] = edgesOfDirectedGraph[i][2];
+            vertex_from = edgesOfDirectedGraph[i][0];
+            vertex_to = edgesOfDirectedGraph[i][1];
+            edge_weight = edgesOfDirectedGraph[i][2];
             
             adjacencyListForGraph->AddEdgeForUndirectedGraph(vertex_from, vertex_to, edge_weight);
             neighborhoodMatrixForGraph->AddEdgeForUndirectedGraph(vertex_from, vertex_to, edge_weight);
@@ -150,8 +139,7 @@ void Graph::GenerateUndirectedGraph() {
 }
 
 void Graph::CreateGraphWithRandomIntegers() {
-    if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr ||
-        edgesOfUndirectedGraph != nullptr) {
+    if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr) {
         DeleteGraph();
         negativeEdgeWeights = false;
     }
@@ -182,66 +170,98 @@ void Graph::CreateGraphWithRandomIntegers() {
     amountOfEdgesInDirectedGraph = (int) ceil(maximumAmountOfEdges * (density / 100));
     amountOfEdgesInDirectedGraph *= 2;
     edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
-    
-    
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> randEdgeWeight(1, 9);
-    std::uniform_int_distribution<int> randVertice(0, amountOfVertices - 1);
-    
-    int vertex_from, vertex_to, edge_weight;
-    int remainingEdges = amountOfEdgesInDirectedGraph;
-    
-    edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
     adjacencyListForGraph = new AdjacencyListForGraph(amountOfVertices);
     neighborhoodMatrixForGraph = new NeighborhoodMatrixForGraph(amountOfVertices);
     
-    vertex_from = randVertice(gen);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist_verticles(0, amountOfVertices - 1);
+    std::uniform_int_distribution<> dist_weight(1, 9);
     
-    int i = 0;
-    int j = 0;
-    while (j < (amountOfVertices - 1) && remainingEdges > 0) {
-        do {
-            vertex_to = randVertice(gen);
-        } while (adjacencyListForGraph->GetVertexDegree(vertex_to) > 0 || vertex_to ==
-                                                                          vertex_from);
-        edge_weight = randEdgeWeight(gen);
-        if (edge_weight<0) negativeEdgeWeights = true;
+    bool *vertexExist = new bool[amountOfVertices];
+    for (int i = 0; i < amountOfVertices; i++) vertexExist[i] = false;
+    
+    int vertex_to, vertex_from, edge_weight;
+    vertex_from = dist_verticles(gen);
+    vertexExist[vertex_from] = true;
+    
+    for (int i = 1; i < minimumAmountOfEdges + 1; i++) {
+        while (true) {
+            vertex_to = dist_verticles(gen);
+            if (!vertexExist[vertex_to])
+                break;
+        }
+        edge_weight = dist_weight(gen);
         
-        edgesOfDirectedGraph[i] = new int[3];
-        edgesOfDirectedGraph[i][0] = vertex_from;
-        edgesOfDirectedGraph[i][1] = vertex_to;
-        edgesOfDirectedGraph[i][2] = edge_weight;
-        
+        edgesOfDirectedGraph[i - 1] = new int[3];
+        edgesOfDirectedGraph[i - 1][0] = vertex_from;
+        edgesOfDirectedGraph[i - 1][1] = vertex_to;
+        edgesOfDirectedGraph[i - 1][2] = edge_weight;
         adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
         neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
         
+        vertexExist[vertex_to] = true;
         vertex_from = vertex_to;
-        
-        --remainingEdges;
-        j++;
-        i++;
     }
     
-    for (auto k = 0; k < remainingEdges; ++k) {
-        do {
-            vertex_from = randVertice(gen);
-            vertex_to = randVertice(gen);
-            edge_weight = randEdgeWeight(gen);
-        } while (neighborhoodMatrixForGraph->GetWeightOfEdge(vertex_from, vertex_to) > 0 ||
-                 vertex_to == vertex_from);
+    bool edgeConnectingTheseVerticesAlreadyExist;
+    for (int i = minimumAmountOfEdges; i < (amountOfEdgesInDirectedGraph / 2); i++) {
+        while (true) {
+            edgeConnectingTheseVerticesAlreadyExist = false;
+            vertex_from = dist_verticles(gen);
+            vertex_to = dist_verticles(gen);
+            for (int j = 0; j < i; j++) {
+                if ((edgesOfDirectedGraph[j][0] == vertex_from && edgesOfDirectedGraph[j][1] == vertex_to) ||
+                    (edgesOfDirectedGraph[j][0] == vertex_to && edgesOfDirectedGraph[j][1] == vertex_from) ||
+                    (vertex_to == vertex_from)) {
+                    edgeConnectingTheseVerticesAlreadyExist = true;
+                    break;
+                }
+            }
+            if (!edgeConnectingTheseVerticesAlreadyExist) {
+                edge_weight = dist_weight(gen);
+                
+                edgesOfDirectedGraph[i] = new int[3];
+                edgesOfDirectedGraph[i][0] = vertex_from;
+                edgesOfDirectedGraph[i][1] = vertex_to;
+                edgesOfDirectedGraph[i][2] = edge_weight;
+                adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                break;
+            }
+        }
         
-        edgesOfDirectedGraph[i] = new int[3];
-        edgesOfDirectedGraph[i][0] = vertex_from;
-        edgesOfDirectedGraph[i][1] = vertex_to;
-        edgesOfDirectedGraph[i][2] = edge_weight;
-        
-        adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
-        neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
-        
-        i++;
     }
     
+    for (int i = (amountOfEdgesInDirectedGraph / 2); i < amountOfEdgesInDirectedGraph; i++) {
+        
+        while (true) {
+            edgeConnectingTheseVerticesAlreadyExist = false;
+            vertex_from = dist_verticles(gen);
+            vertex_to = dist_verticles(gen);
+            for (int j = 0; j < i; j++) {
+                
+                if ((edgesOfDirectedGraph[j][0] == vertex_from && edgesOfDirectedGraph[j][1] == vertex_to) ||
+                    (vertex_to == vertex_from)) {
+                    edgeConnectingTheseVerticesAlreadyExist = true;
+                    break;
+                }
+                
+            }
+            if (!edgeConnectingTheseVerticesAlreadyExist) {
+                edge_weight = dist_weight(gen);
+                
+                edgesOfDirectedGraph[i] = new int[3];
+                edgesOfDirectedGraph[i][0] = vertex_from;
+                edgesOfDirectedGraph[i][1] = vertex_to;
+                edgesOfDirectedGraph[i][2] = edge_weight;
+                adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                break;
+            }
+        }
+        
+    }
     firstVertex = edgesOfDirectedGraph[0][0];
     lastVertex = edgesOfDirectedGraph[amountOfVertices - 1][0];
     
@@ -252,10 +272,6 @@ void Graph::CreateGraphWithRandomIntegers() {
 
 int Graph::getFirstVertex() {
     return firstVertex;
-}
-
-int Graph::getLastVertex() {
-    return lastVertex;
 }
 
 void Graph::PrintGraphs() {
@@ -303,7 +319,7 @@ void Graph::PrintAllKruskalsAlgorithms() {
 void Graph::PrintAllDijkstrasAlgorithms() {
     if (adjacencyListForGraph == nullptr || neighborhoodMatrixForGraph == nullptr)
         throw std::logic_error("Graf nie został zainicjalizowany.");
-    if (negativeEdgeWeights == true)
+    if (negativeEdgeWeights)
         std::cout << "Graf zawiera ujemne krawędzie.\nAlgorytm Dijkstry może nie działać prawidłowo." << std::endl;
     adjacencyListForGraph->DijkstrasAlgorithm(getFirstVertex());
     std::cout << "Shortest Path -> algorytm Dijkstry - listowo: " << std::endl;
@@ -325,12 +341,11 @@ void Graph::PrintAllBellmanFordsAlgorithms() {
 }
 
 void Graph::CreateGraphWithRandomIntegers(int amountOfVertices, double density) {
-    if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr ||
-        edgesOfUndirectedGraph != nullptr) {
+    if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr) {
         DeleteGraph();
         negativeEdgeWeights = false;
     }
-    this->amountOfVertices=amountOfVertices;
+    this->amountOfVertices = amountOfVertices;
     if (amountOfVertices < 2) {
         throw std::invalid_argument("Liczba wierzchołków nie może być mniejsza od 2.");
     }
@@ -353,66 +368,98 @@ void Graph::CreateGraphWithRandomIntegers(int amountOfVertices, double density) 
     amountOfEdgesInDirectedGraph = (int) ceil(maximumAmountOfEdges * (density / 100));
     amountOfEdgesInDirectedGraph *= 2;
     edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
-    
-    
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> randEdgeWeight(1, 9);
-    std::uniform_int_distribution<int> randVertice(0, amountOfVertices - 1);
-    
-    int vertex_from, vertex_to, edge_weight;
-    int remainingEdges = amountOfEdgesInDirectedGraph;
-    
-    edgesOfDirectedGraph = new int *[amountOfEdgesInDirectedGraph];
     adjacencyListForGraph = new AdjacencyListForGraph(amountOfVertices);
     neighborhoodMatrixForGraph = new NeighborhoodMatrixForGraph(amountOfVertices);
     
-    vertex_from = randVertice(gen);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist_verticles(0, amountOfVertices - 1);
+    std::uniform_int_distribution<> dist_weight(1, 9);
     
-    int i = 0;
-    int j = 0;
-    while (j < (amountOfVertices - 1) && remainingEdges > 0) {
-        do {
-            vertex_to = randVertice(gen);
-        } while (adjacencyListForGraph->GetVertexDegree(vertex_to) > 0 || vertex_to ==
-                                                                          vertex_from);
-        edge_weight = randEdgeWeight(gen);
-        if (edge_weight<0) negativeEdgeWeights = true;
+    bool *vertexExist = new bool[amountOfVertices];
+    for (int i = 0; i < amountOfVertices; i++) vertexExist[i] = false;
+    
+    int vertex_to, vertex_from, edge_weight;
+    vertex_from = dist_verticles(gen);
+    vertexExist[vertex_from] = true;
+    
+    for (int i = 1; i < minimumAmountOfEdges + 1; i++) {
+        while (true) {
+            vertex_to = dist_verticles(gen);
+            if (!vertexExist[vertex_to])
+                break;
+        }
+        edge_weight = dist_weight(gen);
         
-        edgesOfDirectedGraph[i] = new int[3];
-        edgesOfDirectedGraph[i][0] = vertex_from;
-        edgesOfDirectedGraph[i][1] = vertex_to;
-        edgesOfDirectedGraph[i][2] = edge_weight;
-        
+        edgesOfDirectedGraph[i - 1] = new int[3];
+        edgesOfDirectedGraph[i - 1][0] = vertex_from;
+        edgesOfDirectedGraph[i - 1][1] = vertex_to;
+        edgesOfDirectedGraph[i - 1][2] = edge_weight;
         adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
         neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
         
+        vertexExist[vertex_to] = true;
         vertex_from = vertex_to;
-        
-        --remainingEdges;
-        j++;
-        i++;
     }
     
-    for (auto k = 0; k < remainingEdges; ++k) {
-        do {
-            vertex_from = randVertice(gen);
-            vertex_to = randVertice(gen);
-            edge_weight = randEdgeWeight(gen);
-        } while (neighborhoodMatrixForGraph->GetWeightOfEdge(vertex_from, vertex_to) > 0 ||
-                 vertex_to == vertex_from);
+    bool edgeConnectingTheseVerticesAlreadyExist;
+    for (int i = minimumAmountOfEdges; i < (amountOfEdgesInDirectedGraph / 2); i++) {
+        while (true) {
+            edgeConnectingTheseVerticesAlreadyExist = false;
+            vertex_from = dist_verticles(gen);
+            vertex_to = dist_verticles(gen);
+            for (int j = 0; j < i; j++) {
+                if ((edgesOfDirectedGraph[j][0] == vertex_from && edgesOfDirectedGraph[j][1] == vertex_to) ||
+                    (edgesOfDirectedGraph[j][0] == vertex_to && edgesOfDirectedGraph[j][1] == vertex_from) ||
+                    (vertex_to == vertex_from)) {
+                    edgeConnectingTheseVerticesAlreadyExist = true;
+                    break;
+                }
+            }
+            if (!edgeConnectingTheseVerticesAlreadyExist) {
+                edge_weight = dist_weight(gen);
+                
+                edgesOfDirectedGraph[i] = new int[3];
+                edgesOfDirectedGraph[i][0] = vertex_from;
+                edgesOfDirectedGraph[i][1] = vertex_to;
+                edgesOfDirectedGraph[i][2] = edge_weight;
+                adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                break;
+            }
+        }
         
-        edgesOfDirectedGraph[i] = new int[3];
-        edgesOfDirectedGraph[i][0] = vertex_from;
-        edgesOfDirectedGraph[i][1] = vertex_to;
-        edgesOfDirectedGraph[i][2] = edge_weight;
-        
-        adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
-        neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
-        
-        i++;
     }
     
+    for (int i = (amountOfEdgesInDirectedGraph / 2); i < amountOfEdgesInDirectedGraph; i++) {
+        
+        while (true) {
+            edgeConnectingTheseVerticesAlreadyExist = false;
+            vertex_from = dist_verticles(gen);
+            vertex_to = dist_verticles(gen);
+            for (int j = 0; j < i; j++) {
+                
+                if ((edgesOfDirectedGraph[j][0] == vertex_from && edgesOfDirectedGraph[j][1] == vertex_to) ||
+                    (vertex_to == vertex_from)) {
+                    edgeConnectingTheseVerticesAlreadyExist = true;
+                    break;
+                }
+                
+            }
+            if (!edgeConnectingTheseVerticesAlreadyExist) {
+                edge_weight = dist_weight(gen);
+                
+                edgesOfDirectedGraph[i] = new int[3];
+                edgesOfDirectedGraph[i][0] = vertex_from;
+                edgesOfDirectedGraph[i][1] = vertex_to;
+                edgesOfDirectedGraph[i][2] = edge_weight;
+                adjacencyListForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                neighborhoodMatrixForGraph->AddEdgeForDirectedGraph(vertex_from, vertex_to, edge_weight);
+                break;
+            }
+        }
+        
+    }
     firstVertex = edgesOfDirectedGraph[0][0];
     lastVertex = edgesOfDirectedGraph[amountOfVertices - 1][0];
     

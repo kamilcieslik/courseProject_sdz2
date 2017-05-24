@@ -82,26 +82,6 @@ void AdjacencyListForGraph::AddEdgeForUndirectedGraph(int vertex_from, int verte
     arrayOfAdjListUndirectedGraph[vertex_from].head = newNode;
 }
 
-int AdjacencyListForGraph::GetVertexDegree(int vertex) {
-    int degree = 0;
-    if (numberOfEdgesOfDirectedGraph == 0) return degree;
-    else {
-        for (auto i = 0; i < numberOfEdgesOfDirectedGraph; i++) {
-            if (arrayOfAdjListDirectedGraph[i].head != nullptr &&
-                arrayOfAdjListDirectedGraph[i].head->vertex == vertex) {
-                auto pointerToNodesOfAdjacencyList = arrayOfAdjListDirectedGraph[i].head;
-                while (pointerToNodesOfAdjacencyList != nullptr) {
-                    degree++;
-                    pointerToNodesOfAdjacencyList = pointerToNodesOfAdjacencyList->next;
-                }
-                return degree;
-            }
-        }
-    }
-    
-    return degree;
-}
-
 void AdjacencyListForGraph::PrintDirectedGraph() {
     for (auto i = 0; i < amountOfVertices; ++i) {
         auto pointerToNodesOfAdjacencyList = arrayOfAdjListDirectedGraph[i].head;
@@ -131,7 +111,7 @@ void AdjacencyListForGraph::PrintUndirectedGraph() {
 }
 
 void AdjacencyListForGraph::PrimsAlgorithm() {
-    Heap heapForEdges;
+    Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     bool *visited = new bool[amountOfVertices];
     
     for (auto i = 0; i < amountOfVertices; i++) {
@@ -175,7 +155,7 @@ void AdjacencyListForGraph::PrimsAlgorithm() {
 }
 
 void AdjacencyListForGraph::KruskalsAlgorithm() {
-    Heap heapForEdges;
+    Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     DisjointSetDataStructure disjointSetForVertex(amountOfVertices);
     
     for (auto i = 0; i < amountOfVertices; i++) {
@@ -225,7 +205,7 @@ void AdjacencyListForGraph::PrintMST() {
 }
 
 void AdjacencyListForGraph::DijkstrasAlgorithm(int firstVertex) {
-    HeapForVertices heapForVertices;
+    HeapForVertices heapForVertices(amountOfVertices);
     
     if (currentDistancesFromFirstVertex != nullptr) {
         delete[] currentDistancesFromFirstVertex;
@@ -316,7 +296,7 @@ void AdjacencyListForGraph::Bellman_FordAlgorithm(int firstVertex) {
         }
         if (withoutChange) exitBF = true;
     }
-    if (exitBF == false) {
+    if (!exitBF) {
         for (auto j = 0; j < amountOfVertices; j++) {
             auto pointer = arrayOfAdjListDirectedGraph[j].head;
             while (pointer != nullptr) {
@@ -335,15 +315,16 @@ void AdjacencyListForGraph::PrintShortestPath(int firstVertex) {
     int numberOfPredecessors = 0;
     for (auto i = 0; i < amountOfVertices; i++) {
         
-        std::cout << i << ": ";
+        std::cout << i << ":\t";
+        std::cout << " Koszt: " << currentDistancesFromFirstVertex[i] <<"\t";
         for (auto j = i; j > -1; j = previousVertices[j]) shortestPaths[numberOfPredecessors++] = j;
         while (numberOfPredecessors) {
             if (numberOfPredecessors == 1) {
                 std::cout << shortestPaths[--numberOfPredecessors] << ".";
             } else {
-                std::cout << shortestPaths[--numberOfPredecessors] << " <- ";
+                std::cout << shortestPaths[--numberOfPredecessors] << " -> ";
             }
         }
-        std::cout << " Koszt: " << currentDistancesFromFirstVertex[i] << std::endl;
+        std::cout<<std::endl;
     }
 }

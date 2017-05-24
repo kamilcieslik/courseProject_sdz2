@@ -23,15 +23,14 @@ private:
     int *shortestPaths;
     int *currentDistancesFromFirstVertex;
     int *previousVertices;
-    
+
 public:
     explicit NeighborhoodMatrixForGraph(int amountOfVertices);
     
     ~NeighborhoodMatrixForGraph();
     
-    int GetWeightOfEdge(int vertex_from, int vertex_to);
-    
     void AddEdgeForDirectedGraph(int vertex_from, int vertex_to, int vertex_weight);
+    
     void AddEdgeForUndirectedGraph(int vertex_from, int vertex_to, int vertex_weight);
     
     void PrintDirectedGraph();
