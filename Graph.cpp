@@ -36,7 +36,9 @@ Graph::~Graph() {
     DeleteGraph();
 }
 
-
+/*
+ * Odczyt grafu skierowanego z pliku.
+ */
 void Graph::ReadGraphFromFile(std::string path) {
     if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr) {
         negativeEdgeWeights = false;
@@ -86,6 +88,9 @@ void Graph::ReadGraphFromFile(std::string path) {
     }
 }
 
+/*
+ * Zapis grafu skierowanego do pliku.
+ */
 void Graph::SaveToFile() {
     if (adjacencyListForGraph == nullptr || neighborhoodMatrixForGraph == nullptr)
         throw std::logic_error("Graf nie został zainicjalizowany.");
@@ -100,6 +105,9 @@ void Graph::SaveToFile() {
     }
 }
 
+/*
+ * Generowanie grafu nieskierowanego z postaci skierowanej.
+ */
 void Graph::GenerateUndirectedGraph() {
     bool *edgeConnectingTheseVerticesAlreadyExist;
     edgeConnectingTheseVerticesAlreadyExist = new bool[amountOfEdgesInDirectedGraph];
@@ -138,6 +146,9 @@ void Graph::GenerateUndirectedGraph() {
     delete[] edgeConnectingTheseVerticesAlreadyExist;
 }
 
+/*
+ * Generowanie spójnego grafu skierowanego.
+ */
 void Graph::CreateGraphWithRandomIntegers() {
     if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr) {
         DeleteGraph();
@@ -340,6 +351,10 @@ void Graph::PrintAllBellmanFordsAlgorithms() {
     neighborhoodMatrixForGraph->PrintShortestPath(getFirstVertex());
 }
 
+/*
+ * Generowanie spójnego grafu skierowanego z argumentami pobierającymi parametry grafu.
+ * Funkcja na użytek testów.
+ */
 void Graph::CreateGraphWithRandomIntegers(int amountOfVertices, double density) {
     if (adjacencyListForGraph != nullptr || neighborhoodMatrixForGraph != nullptr || edgesOfDirectedGraph != nullptr) {
         DeleteGraph();

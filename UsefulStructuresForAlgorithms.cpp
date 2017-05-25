@@ -4,6 +4,9 @@
 
 #include "UsefulStructuresForAlgorithms.h"
 
+/*
+ * Kolejka na bazie kopca na użytek algorytmów problemu MST.
+ */
 void Edge::AddEdge(int vertex_from, int vertex_to, int edge_weight) {
     this->vertex_from = vertex_from;
     this->vertex_to = vertex_to;
@@ -87,7 +90,9 @@ void Heap::DeleteEdgeFromTheTop() {
 
 
 
-
+/*
+ * Kolejka na bazie kopca na użytek algorytmu Dijkstry dla problemu SP.
+ */
 void Vertex::AddVertex(int vertex, int distanceFromFirstVertex){
     this->vertex = vertex;
     this->distanceFromFirstVertex = distanceFromFirstVertex;
@@ -186,6 +191,10 @@ bool HeapForVertices::isIn(int vertex) {
 }
 
 
+
+/*
+ * Implementacja zbiorów rozłącznych na potrzeby algorytmu Kruskala dla problemu MST.
+ */
 DisjointSetDataStructure::DisjointSetDataStructure(int numberOfNodes) {
     disjointSetTree = new DisjointSetDataStructure::NodeOfDisjointSetDataStructure[numberOfNodes];
 }

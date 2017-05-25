@@ -113,6 +113,9 @@ void NeighborhoodMatrixForGraph::PrintUndirectedGraph() {
     }
 }
 
+/*
+ * Algorytm Prima na bazie reprezentacji macierzowej.
+ */
 void NeighborhoodMatrixForGraph::PrimsAlgorithm() {
     Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     bool *visited = new bool[amountOfVertices];
@@ -156,6 +159,9 @@ void NeighborhoodMatrixForGraph::PrimsAlgorithm() {
     delete[] visited;
 }
 
+/*
+ * Algorytm Kruskala na bazie reprezentacji macierzowej.
+ */
 void NeighborhoodMatrixForGraph::KruskalsAlgorithm() {
     Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     DisjointSetDataStructure disjointSetForVertex(amountOfVertices);
@@ -205,6 +211,9 @@ void NeighborhoodMatrixForGraph::PrintMST() {
     std::cout << "Waga MST:\t" << weightOfMST << std::endl;
 }
 
+/*
+ * Algorytm Dijkstry na bazie reprezentacji macierzowej.
+ */
 void NeighborhoodMatrixForGraph::DijkstrasAlgorithm(int firstVertex) {
     HeapForVertices heapForVertices(amountOfVertices);
     
@@ -256,6 +265,9 @@ void NeighborhoodMatrixForGraph::DijkstrasAlgorithm(int firstVertex) {
     }
 };
 
+/*
+ * Algorytm Bellmana_Forda na bazie reprezentacji macierzowej.
+ */
 void NeighborhoodMatrixForGraph::Bellman_FordAlgorithm(int firstVertex) {
     if (currentDistancesFromFirstVertex != nullptr) {
         delete[] currentDistancesFromFirstVertex;

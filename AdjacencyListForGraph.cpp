@@ -110,6 +110,9 @@ void AdjacencyListForGraph::PrintUndirectedGraph() {
     }
 }
 
+/*
+ * Algorytm Prima na bazie reprezentacji listowej.
+ */
 void AdjacencyListForGraph::PrimsAlgorithm() {
     Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     bool *visited = new bool[amountOfVertices];
@@ -154,6 +157,10 @@ void AdjacencyListForGraph::PrimsAlgorithm() {
     delete[] visited;
 }
 
+
+/*
+ * Algorytm Kruskala na bazie reprezentacji listowej.
+ */
 void AdjacencyListForGraph::KruskalsAlgorithm() {
     Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     DisjointSetDataStructure disjointSetForVertex(amountOfVertices);
@@ -204,6 +211,10 @@ void AdjacencyListForGraph::PrintMST() {
     std::cout << "Waga MST:\t" << weightOfMST << std::endl;
 }
 
+
+/*
+ * Algorytm Dijkstry na bazie reprezentacji listowej.
+ */
 void AdjacencyListForGraph::DijkstrasAlgorithm(int firstVertex) {
     HeapForVertices heapForVertices(amountOfVertices);
     
@@ -253,6 +264,9 @@ void AdjacencyListForGraph::DijkstrasAlgorithm(int firstVertex) {
     }
 }
 
+/*
+ * Algorytm Bellmana-Forda na bazie reprezentacji listowej.
+ */
 void AdjacencyListForGraph::Bellman_FordAlgorithm(int firstVertex) {
     if (currentDistancesFromFirstVertex != nullptr) {
         delete[] currentDistancesFromFirstVertex;
