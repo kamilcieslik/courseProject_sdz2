@@ -1,7 +1,9 @@
 #include <iostream>
-#include "GraphAdjacencyListsImplementation.h"
-#include "GraphNeighborMatricesImplementation.h"
+#include <fstream>
 #include "Graph.h"
+#include "TimeMeasurement.h"
+#include "AlgorithmTest.h"
+
 
 void displayMenu(const std::string &info, const std::string &alghoritm_1,
                  const std::string &alghoritm_2) //Menu dla tabeli i listy.
@@ -13,18 +15,14 @@ void displayMenu(const std::string &info, const std::string &alghoritm_1,
     std::cout << "3. Wyświetl (macierzowo i listowo)." << std::endl;
     std::cout << "4. Algorytm - " << alghoritm_1 << " (macierzowo i listowo)." << std::endl;
     std::cout << "5. Algorytm - " << alghoritm_2 << " (macierzowo i listowo)." << std::endl;
-    std::cout << "9. Test (pomiary)." << std::endl;
+    std::cout << "8. Zapisz graf do pliku." << std::endl;
     std::cout << "0. Powrot do menu." << std::endl;
     std::cout << "Podaj opcje:";
 }
 
 void menu_mst() //Obsługa tabeli.
 {
-    
-    //GraphAdjListImpl gh(4);
-    GraphAdjListImpl g;
-    
-    
+    Graph g;
     std::string path;
     int option;
     do {
@@ -33,27 +31,58 @@ void menu_mst() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                g.CreateGraphWithRandomIntegers();
+                std::cout << "Podaj sciezke pliku z danymi: ";
+                std::cin >> path;
+                try {
+                    g.ReadGraphFromFile(path);
+                } catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
+            
             case 2: //Generowanie grafu pseudolosowo.
-    
-                g.CreateAdjacencyListsForDirectedGraph();
+                try {
+                    g.CreateGraphWithRandomIntegers();
+                }
+                catch (std::invalid_argument &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
-            case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                g.PrintDirectedGraph();
+            
+            case 3: //Wyświetlanie grafu (macierzowo i listowo w wersji skierowanej oraz nieskierowanej).
+                try {
+                    g.PrintGraphs();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
+            
             case 4: //Algorytm 1. - Prima (macierzowo i listowo).
-                g.ReadGraphFromFile("undirectedGraph1.txt");
-                //g.SaveToFileDirectedGraph();
-                //g.SaveToFileUndirectedGraph();
+                try {
+                    g.PrintAllPrimsAlgorithms();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
             
             case 5: //Algorytm 2. - Kruskala (macierzowo i listowo).
-                
+                try {
+                    g.PrintAllKruskalsAlgorithms();
+                }
+                catch (std::logic_error &e) { //Cykl ujemny.
+                    std::cout << e.what() << std::endl;
+                }
                 break;
             
-            case 9: //Test - pomiary czasowe.
-                
+            case 8: //Zapis grafu do pliku.
+                try {
+                    g.SaveToFile();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
             
             default:
@@ -65,7 +94,7 @@ void menu_mst() //Obsługa tabeli.
 
 void menu_the_shortest_path() //Obsługa tabeli.
 {
-    GraphNghbMatricesImpl g2;
+    Graph g;
     std::string path;
     int option;
     do {
@@ -74,24 +103,57 @@ void menu_the_shortest_path() //Obsługa tabeli.
         std::cout << std::endl;
         switch (option) {
             case 1: //Tworzenie grafu z pliku txt.
-                g2.CreateGraphWithRandomIntegers();
+                std::cout << "Podaj sciezke pliku z danymi: ";
+                std::cin >> path;
+                g.ReadGraphFromFile(path);
                 break;
+            
             case 2: //Generowanie grafu pseudolosowo.
-                g2.CreateNeighborMatricesForDirectedGraph();
+                try {
+                    g.CreateGraphWithRandomIntegers();
+                }
+                catch (std::invalid_argument &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
-            case 3: //Wyświetlanie grafu (macierzowo i listowo).
-                g2.PrintDirectedGraph();
+            
+            case 3: //Wyświetlanie grafu (macierzowo i listowo w wersji skierowanej oraz nieskierowanej).
+                try {
+                    g.PrintGraphs();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
+            
             case 4: //Algorytm 1. - Dijkstry (macierzowo i listowo).
-                
+                try {
+                    g.PrintAllDijkstrasAlgorithms();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
             
-            case 5: //Algorytm 2. - Forda-Bellmana (macierzowo i listowo).
-                
+            case 5: //Algorytm 2. - Bellmana-Forda (macierzowo i listowo).
+                try {
+                    g.PrintAllBellmanFordsAlgorithms();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
+                catch (std::underflow_error &e_2) { //Cykl ujemny.
+                    std::cout << e_2.what() << std::endl;
+                }
                 break;
             
-            case 9: //Test - pomiary czasowe.
-                
+            case 8: //Zapis grafu do pliku.
+                try {
+                    g.SaveToFile();
+                }
+                catch (std::logic_error &e) {
+                    std::cout << e.what() << std::endl;
+                }
                 break;
             
             default:
@@ -108,6 +170,7 @@ int main() {
         std::cout << "==== MENU GŁÓWNE ===" << std::endl;
         std::cout << "1. Wyznaczanie minimalnego drzewa rozpinającego." << std::endl;
         std::cout << "2. Wyznaczanie najkrótszej ścieżki w grafie." << std::endl;
+        std::cout << "3. Testy czasowe." << std::endl;
         std::cout << "0. Wyjscie." << std::endl;
         std::cout << "Podaj opcje:";
         std::cin >> option;
@@ -121,8 +184,18 @@ int main() {
             case 2:
                 menu_the_shortest_path();
                 break;
-            
-            default:
+            case 3:
+                int increaseAmountOfVertex;
+                int numberOfIncreaseAmountOfVertex;
+                int numberOfRepetitions;
+                std::cout << "O ile ma się zwiększać ilość wierzchołków poczynając od 50? ";
+                std::cin >> increaseAmountOfVertex;
+                std::cout << "Ile razy ma się zwiększać ilość wierzchołków poczynając od 50? ";
+                std::cin >> numberOfIncreaseAmountOfVertex;
+                std::cout << "Podaj ilość instancji każdego zestawu danych w celu uśrednienia wyniku ";
+                std::cin >> numberOfRepetitions;
+                AlgorithmTest test;
+                test.Test(increaseAmountOfVertex, numberOfRepetitions, numberOfIncreaseAmountOfVertex);
                 break;
         }
         
