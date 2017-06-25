@@ -13,12 +13,12 @@ NeighborhoodMatrixForGraph::NeighborhoodMatrixForGraph(int amountOfVertices) : n
     this->amountOfVertices = amountOfVertices;
     arrayOfMatrixDirectedGraph = new int *[amountOfVertices];
     arrayOfMatrixUndirectedGraph = new int *[amountOfVertices];
-    
+
     for (auto i = 0; i < amountOfVertices; i++) {
         arrayOfMatrixDirectedGraph[i] = new int[amountOfVertices];
         arrayOfMatrixUndirectedGraph[i] = new int[amountOfVertices];
     }
-    
+
     for (auto i = 0; i < amountOfVertices; i++) {
         for (auto j = 0; j < amountOfVertices; j++) {
             arrayOfMatrixDirectedGraph[i][j] = 0;
@@ -36,16 +36,16 @@ NeighborhoodMatrixForGraph::~NeighborhoodMatrixForGraph() {
     delete[] arrayOfMatrixUndirectedGraph;
     arrayOfMatrixDirectedGraph = nullptr;
     arrayOfMatrixUndirectedGraph = nullptr;
-    
+
     delete[] MST_Prim;
     MST_Prim = nullptr;
-    
+
     delete[] currentDistancesFromFirstVertex;
     currentDistancesFromFirstVertex = nullptr;
-    
+
     delete[] previousVertices;
     currentDistancesFromFirstVertex = nullptr;
-    
+
     delete[] shortestPaths;
     shortestPaths = nullptr;
 }
@@ -113,20 +113,20 @@ void NeighborhoodMatrixForGraph::PrintUndirectedGraph() {
     }
 }
 
-/*
- * Algorytm Prima na bazie reprezentacji macierzowej.
- */
+//-------------------------------------------------------------------------
+// Algorytm Prima na bazie reprezentacji macierzowej.
+//-------------------------------------------------------------------------
 void NeighborhoodMatrixForGraph::PrimsAlgorithm() {
     Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     bool *visited = new bool[amountOfVertices];
-    
+
     for (auto i = 0; i < amountOfVertices; i++) {
         visited[i] = false;
     }
-    
+
     int vertex = 0;
     visited[vertex] = true;
-    
+
     weightOfMST = 0;
     if (MST_Prim != nullptr) {
         delete[] MST_Prim;
@@ -138,65 +138,57 @@ void NeighborhoodMatrixForGraph::PrimsAlgorithm() {
         for (auto j = 0; j < amountOfVertices; j++) {
             if (arrayOfMatrixUndirectedGraph[vertex][j] != 0 &&
                 !visited[j]) {
-                edge.vertex_from = vertex;
-                edge.vertex_to = j;
-                edge.edge_weight = arrayOfMatrixUndirectedGraph[vertex][j];
-                heapForEdges.AddEdge(edge, edge.edge_weight);
+                heapForEdges.PushEdge(Edge(vertex, j, arrayOfMatrixUndirectedGraph[vertex][j]));
             }
         }
-        
+
         do {
-            edge = heapForEdges.GetEdgeFromTheBeginning();
-            heapForEdges.DeleteEdgeFromTheTop();
+            edge = heapForEdges.PopEdge();
         } while (visited[edge.vertex_to]);
-        
-        MST_Prim[i - 1].AddEdge(edge.vertex_from, edge.vertex_to, edge.edge_weight);
+
+        MST_Prim[i - 1] = edge;
         weightOfMST += edge.edge_weight;
-        
+
         visited[edge.vertex_to] = true;
         vertex = edge.vertex_to;
     }
     delete[] visited;
 }
 
-/*
- * Algorytm Kruskala na bazie reprezentacji macierzowej.
- */
+//-------------------------------------------------------------------------
+// Algorytm Kruskala na bazie reprezentacji macierzowej.
+//-------------------------------------------------------------------------
 void NeighborhoodMatrixForGraph::KruskalsAlgorithm() {
     Heap heapForEdges(numberOfEdgesOfUndirectedGraph);
     DisjointSetDataStructure disjointSetForVertex(amountOfVertices);
-    
+
     for (auto i = 0; i < amountOfVertices; i++) {
         disjointSetForVertex.Init(i);
     }
-    
+
     int vertex = 0;
     Edge edge;
-    
+
     for (auto i = vertex; i < amountOfVertices; i++) {
         for (auto j = 0; j < amountOfVertices; j++) {
-            if (arrayOfMatrixUndirectedGraph[i][j] != 0) {
-                edge.vertex_from = i;
-                edge.vertex_to = j;
-                edge.edge_weight = arrayOfMatrixUndirectedGraph[i][j];
-                heapForEdges.AddEdge(edge, edge.edge_weight);
-            }
+            int weight = arrayOfMatrixDirectedGraph[i][j];
+            if (weight != 0)
+                heapForEdges.PushEdge(Edge(i, j, weight));
         }
     }
-    
+
     weightOfMST = 0;
     if (MST_Prim != nullptr) {
         delete[] MST_Prim;
-        MST_Prim = nullptr;
     }
+
     MST_Prim = new Edge[amountOfVertices - 1];
-    for (auto i = 1; i < amountOfVertices; i++) {
+    for (auto i = 0; i < amountOfVertices-1; i++) {
         do {
-            edge = heapForEdges.GetEdgeFromTheBeginning();
-            heapForEdges.DeleteEdgeFromTheTop();
+            edge = heapForEdges.PopEdge();
         } while (disjointSetForVertex.FindParent(edge.vertex_from) == disjointSetForVertex.FindParent(edge.vertex_to));
-        
-        MST_Prim[i - 1].AddEdge(edge.vertex_from, edge.vertex_to, edge.edge_weight);
+
+        MST_Prim[i] = edge;
         weightOfMST += edge.edge_weight;
         disjointSetForVertex.Union(edge.vertex_from, edge.vertex_to);
     }
@@ -211,26 +203,26 @@ void NeighborhoodMatrixForGraph::PrintMST() {
     std::cout << "Waga MST:\t" << weightOfMST << std::endl;
 }
 
-/*
- * Algorytm Dijkstry na bazie reprezentacji macierzowej.
- */
+//-------------------------------------------------------------------------
+// Algorytm Dijkstry na bazie reprezentacji macierzowej.
+//-------------------------------------------------------------------------
 void NeighborhoodMatrixForGraph::DijkstrasAlgorithm(int firstVertex) {
     HeapForVertices heapForVertices(amountOfVertices);
-    
+
     if (currentDistancesFromFirstVertex != nullptr) {
         delete[] currentDistancesFromFirstVertex;
         currentDistancesFromFirstVertex = nullptr;
-        
+
         delete[] previousVertices;
         previousVertices = nullptr;
-        
+
         delete[] shortestPaths;
         shortestPaths = nullptr;
     }
     currentDistancesFromFirstVertex = new int[amountOfVertices];
     previousVertices = new int[amountOfVertices];
     shortestPaths = new int[amountOfVertices];
-    
+
     Vertex vertex_st;
     for (auto v = 0; v < amountOfVertices; v++) {
         currentDistancesFromFirstVertex[v] = INT_MAX;
@@ -238,11 +230,11 @@ void NeighborhoodMatrixForGraph::DijkstrasAlgorithm(int firstVertex) {
         vertex_st.AddVertex(v, currentDistancesFromFirstVertex[v]);
         heapForVertices.AddVertex(vertex_st, vertex_st.distanceFromFirstVertex);
     }
-    
+
     int vertex = firstVertex;
     currentDistancesFromFirstVertex[vertex] = 0;
     heapForVertices.changeDistanceFromFirstVertex(vertex, 0);
-    
+
     while (heapForVertices.getAmountOfVertices() != 0) {
         vertex_st = heapForVertices.GetVertexFromTheBeginning();
         heapForVertices.DeleteVertexFromTheTop();
@@ -259,38 +251,38 @@ void NeighborhoodMatrixForGraph::DijkstrasAlgorithm(int firstVertex) {
                     heapForVertices.changeDistanceFromFirstVertex(v, currentDistancesFromFirstVertex[v]);
                     previousVertices[v] = vertex_st.vertex;
                 }
-                
+
             }
         }
     }
 };
 
-/*
- * Algorytm Bellmana_Forda na bazie reprezentacji macierzowej.
- */
+//-------------------------------------------------------------------------
+// Algorytm Bellmana_Forda na bazie reprezentacji macierzowej.
+//-------------------------------------------------------------------------
 void NeighborhoodMatrixForGraph::Bellman_FordAlgorithm(int firstVertex) {
     if (currentDistancesFromFirstVertex != nullptr) {
         delete[] currentDistancesFromFirstVertex;
         currentDistancesFromFirstVertex = nullptr;
-        
+
         delete[] previousVertices;
         previousVertices = nullptr;
-        
+
         delete[] shortestPaths;
         shortestPaths = nullptr;
     }
     currentDistancesFromFirstVertex = new int[amountOfVertices];
     previousVertices = new int[amountOfVertices];
     shortestPaths = new int[amountOfVertices];
-    
+
     for (auto v = 0; v < amountOfVertices; v++) {
         currentDistancesFromFirstVertex[v] = INT_MAX - 1000;
         previousVertices[v] = INT_MIN;
     }
-    
+
     int vertex = firstVertex;
     currentDistancesFromFirstVertex[vertex] = 0;
-    
+
     bool withoutChange;
     bool exitBF = false;
     for (auto i = 1; i < amountOfVertices; i++) {
@@ -311,7 +303,7 @@ void NeighborhoodMatrixForGraph::Bellman_FordAlgorithm(int firstVertex) {
         }
         if (withoutChange) exitBF = true;
     }
-    
+
     if (!exitBF) {
         for (auto j = 0; j < amountOfVertices; j++) {
             for (auto k = 0; k < amountOfVertices; k++) {
@@ -330,9 +322,9 @@ void NeighborhoodMatrixForGraph::PrintShortestPath(int firstVertex) {
     std::cout << "Start = " << firstVertex << std::endl;
     int numberOfPredecessors = 0;
     for (auto i = 0; i < amountOfVertices; i++) {
-        
+
         std::cout << i << ":\t";
-        std::cout << " Koszt: " << currentDistancesFromFirstVertex[i] <<"\t";
+        std::cout << " Koszt: " << currentDistancesFromFirstVertex[i] << "\t";
         for (auto j = i; j > -1; j = previousVertices[j]) shortestPaths[numberOfPredecessors++] = j;
         while (numberOfPredecessors) {
             if (numberOfPredecessors == 1) {
@@ -341,6 +333,6 @@ void NeighborhoodMatrixForGraph::PrintShortestPath(int firstVertex) {
                 std::cout << shortestPaths[--numberOfPredecessors] << " -> ";
             }
         }
-        std::cout<<std::endl;
+        std::cout << std::endl;
     }
 }
